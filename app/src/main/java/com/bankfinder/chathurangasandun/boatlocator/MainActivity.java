@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -74,7 +76,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     }
+
+
 
 
     @Override
@@ -180,8 +185,16 @@ public class MainActivity extends AppCompatActivity {
         //get current language
         LanguageSelector.setCurrentLangnuage(getApplicationContext());
         String currentLangnuage = LanguageSelector.getCurrentLangnuage();
-        if(!beforePauseLanguage.equals(currentLangnuage)){
+        if(!beforePauseLanguage.equals(currentLangnuage)) {
             Log.d("main", "i'm changed ");
+
+            if("en".equals(currentLangnuage)){
+                setTitle("Home");
+            }else if("sl".equals(currentLangnuage)){
+                setTitle("ගෘහය");
+            }else{
+                setTitle("வீட்டில்");
+            }
         }else{
             Log.d("main", "i'm not changed");
         }
@@ -196,4 +209,6 @@ public class MainActivity extends AppCompatActivity {
         beforePauseLanguage =  LanguageSelector.getCurrentLangnuage();
         Log.d("main","i'm pause");
     }
+
+
 }
