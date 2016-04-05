@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
-    public  static String local = "en";
+    public  static String local = "sl";
 
 
     @Override
