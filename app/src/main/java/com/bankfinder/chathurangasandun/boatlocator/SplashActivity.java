@@ -41,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                LanguageSelector.setLanguage(getBaseContext());
+                LanguageSelector.setCurrentLangnuage(getApplicationContext());
 
                 Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(i);

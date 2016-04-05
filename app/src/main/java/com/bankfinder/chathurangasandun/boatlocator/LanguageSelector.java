@@ -10,13 +10,13 @@ import android.util.Log;
  */
 public  class LanguageSelector {
 
-    public static String currentLangnuage = "en";
+    private static String currentLangnuage = "en";
 
     public LanguageSelector() {
 
     }
 
-    public static void setLanguage(Context context){
+    public static void setCurrentLangnuage(Context context){
         SharedPreferences language_list = PreferenceManager.getDefaultSharedPreferences(context);
         String selectedLanguage = language_list.getString("language_list","en");
         Log.d("language", selectedLanguage);

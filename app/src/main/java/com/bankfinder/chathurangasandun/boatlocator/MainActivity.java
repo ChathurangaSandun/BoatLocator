@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    String beforePauseLanguage = LanguageSelector.getCurrentLangnuage() ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -167,5 +171,29 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        //get current language
+        LanguageSelector.setCurrentLangnuage(getApplicationContext());
+        String currentLangnuage = LanguageSelector.getCurrentLangnuage();
+        if(!beforePauseLanguage.equals(currentLangnuage)){
+            Log.d("main", "i'm changed ");
+        }else{
+            Log.d("main", "i'm not changed");
+        }
+
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        beforePauseLanguage =  LanguageSelector.getCurrentLangnuage();
+        Log.d("main","i'm pause");
     }
 }
