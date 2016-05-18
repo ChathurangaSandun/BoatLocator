@@ -23,6 +23,9 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -38,9 +41,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    private ViewPager viewPager;
 
     String beforePauseLanguage = LanguageSelector.getCurrentLangnuage() ;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,16 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        viewPager = (ViewPager) findViewById(R.id.veiwPager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
+
+
 
 
 
@@ -122,6 +136,59 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         beforePauseLanguage =  LanguageSelector.getCurrentLangnuage();
         Log.d("main","i'm pause");
+    }
+
+
+    //for custom tabs+================================================================================
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new OrginalMapFragment(), "ONE");
+        adapter.addFrag(new WeatherMapFragment(), "TWO");
+        viewPager.setAdapter(adapter);
+    }
+
+
+    private void setupTabIcons() {
+
+        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabOne.setText(R.string.boat_tab_title);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_directions_boat_white_24dp, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabTwo.setText(R.string.weathermap_tab_title);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_brightness_7_white_24dp, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
 

@@ -100,6 +100,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="boat_tab_title">MY BOAT MAP</string>
+    <string name="weathermap_tab_title">WEATHER MAP</string>
+
+
+    <string name="accessToken">pk.eyJ1IjoiY2hhdGh1cmFuZ2FzYW5kdW4iLCJhIjoiY2ludHk1ZTM1MDBtNXZmbTJodW4ya3EzciJ9.rCyKdgsarJup4EZoo_sbUQ</string>
+    <string name="border_style">mapbox://styles/chathurangasandun/cinty6e8f00i4c4nopacti8fp</string>
 
 
 </resources>
