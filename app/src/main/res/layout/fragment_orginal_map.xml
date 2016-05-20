@@ -15,10 +15,9 @@
         mapbox:style_url="@string/border_style"
         mapbox:center_latitude="8.948474"
         mapbox:center_longitude="79.948241"
-        mapbox:zoom_min="0"
-        mapbox:zoom="9"
-        mapbox:zoom_max="12"
-        mapbox:my_location_enabled="true"
+        mapbox:zoom_min="5"
+        mapbox:zoom="10"
+        mapbox:zoom_max="20"
          />
 
     <ProgressBar
