@@ -1,10 +1,12 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.annotations.Icon;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -67,6 +72,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
     SharedPreferences downloadvalue;
     SharedPreferences.Editor edit;
 
+
+
     public OrginalMapFragment() {
         // Required empty public constructor
     }
@@ -96,13 +103,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
-
-
-
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,10 +130,14 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
 
 
 
+
         if(downloadvalue.getInt("VALUE",0) != 100){
             downloadRegion();
         }else{
             Log.d(TAG, "completed");
+
+            LocationService locationService = new LocationService();
+
         }
 
 
@@ -141,6 +148,49 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     }
+
+    @Override
+    public void onMapReady(MapboxMap mb) {
+        mapboxMap = mb;
+        mapboxMap.setMyLocationEnabled(true);
+        mapboxMap.setOnMyLocationChangeListener(myLocationChangeListener);
+
+
+
+
+
+
+
+    }
+    private MapboxMap.OnMyLocationChangeListener myLocationChangeListener = new MapboxMap.OnMyLocationChangeListener() {
+        @Override
+        public void onMyLocationChange(Location location) {
+            double myLocationLat = location.getLatitude();
+            double myLocationLong = location.getLongitude();
+
+
+            IconFactory iconFactory = IconFactory.getInstance(getActivity());
+            Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.my_boat); //http://www.flaticon.com/free-icon/sailboat_116500
+            Icon icon = iconFactory.fromDrawable(iconDrawable);
+
+
+            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+
+            mapboxMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(loc))
+                    .title("Sydney Opera House")
+                    .snippet("Bennelong Point, Sydney NSW 2000, Australia")
+                    .icon(icon));
+
+
+
+            if(mapboxMap != null){
+                mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 10.0f));
+            }
+
+            //nearestBranchLocation = getNearestBranch();
+        }
+    };
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -224,17 +274,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
 
 
 
-    @Override
-    public void onMapReady(MapboxMap mb) {
-        mapboxMap = mb;
 
-
-
-
-
-
-
-    }
 
     private void downloadRegion(){
 

@@ -18,7 +18,6 @@
         mapbox:zoom_min="0"
         mapbox:zoom="9"
         mapbox:zoom_max="12"
-        mapbox:my_location_enabled="true"
          />
 
     <ProgressBar
