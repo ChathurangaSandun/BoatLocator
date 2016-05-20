@@ -1,12 +1,14 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
@@ -30,6 +33,9 @@ import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 /**
@@ -72,7 +78,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
     SharedPreferences downloadvalue;
     SharedPreferences.Editor edit;
 
-
+    ArrayList<LatLng> path = new ArrayList<>();
 
     public OrginalMapFragment() {
         // Required empty public constructor
@@ -162,35 +168,97 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     }
-    private MapboxMap.OnMyLocationChangeListener myLocationChangeListener = new MapboxMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            double myLocationLat = location.getLatitude();
-            double myLocationLong = location.getLongitude();
+    private MapboxMap.OnMyLocationChangeListener myLocationChangeListener;
+
+    {
+        myLocationChangeListener = new MapboxMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                double myLocationLat = location.getLatitude();
+                double myLocationLong = location.getLongitude();
 
 
-            IconFactory iconFactory = IconFactory.getInstance(getActivity());
-            Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.my_boat); //http://www.flaticon.com/free-icon/sailboat_116500
-            Icon icon = iconFactory.fromDrawable(iconDrawable);
+                IconFactory iconFactory = IconFactory.getInstance(getActivity());
+                Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.dott); //http://www.flaticon.com/free-icon/sailboat_116500
+                Icon icon = iconFactory.fromDrawable(iconDrawable);
 
 
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-
-            mapboxMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(loc))
-                    .title("Sydney Opera House")
-                    .snippet("Bennelong Point, Sydney NSW 2000, Australia")
-                    .icon(icon));
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
 
 
+                //time
 
-            if(mapboxMap != null){
-                mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 10.0f));
+                Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR);
+                int minutes = c.get(Calendar.MINUTE);
+                int seconds = c.get(Calendar.SECOND);
+                String time = ""+hour +" :  "+ minutes+" : " +seconds;
+
+
+                Log.d(TAG, "seconds "+time);
+
+                if (path.isEmpty()) { // for first lunch
+                    path.add(loc);
+
+                    Drawable iconDrawable1 = ContextCompat.getDrawable(getActivity(), R.drawable.my_boat); //http://www.flaticon.com/free-icon/sailboat_116500
+                    Icon icon1 = iconFactory.fromDrawable(iconDrawable);
+
+
+
+
+
+                    mapboxMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(loc))
+                            .title(time)
+                            .snippet("")
+                            .icon(icon1));
+                } else {
+                    path.add(loc);
+                    mapboxMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(loc))
+                            .title(time)
+                            .snippet("")
+                            .icon(icon));
+                }
+
+
+                showMyPath();
+
+
+                if (mapboxMap != null) {
+                    mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12.0f));
+                }
+
+                //nearestBranchLocation = getNearestBranch();
             }
 
-            //nearestBranchLocation = getNearestBranch();
-        }
-    };
+            private void showMyPath() {
+
+                if (path.size() > 0) {
+
+                    for (LatLng l : path
+                            ) {
+                        Log.d(TAG, l.getLatitude() + "");
+                    }
+
+                    Log.d(TAG, "size()" + path.size());
+
+
+                    LatLng[] pointsArray = path.toArray(new LatLng[path.size()]);
+
+
+                    // Draw Points on MapView
+                    mapboxMap.addPolyline(new PolylineOptions()
+                            .add(pointsArray)
+
+                            .color(Color.parseColor("#3bb2d0"))
+                            .width(2));
+                }
+
+
+            }
+        };
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
