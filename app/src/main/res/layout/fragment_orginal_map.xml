@@ -13,10 +13,13 @@
         android:layout_height="match_parent"
         mapbox:access_token="@string/accessToken"
         mapbox:style_url="@string/border_style"
-        mapbox:center_latitude="37.73359"
-        mapbox:center_longitude="-119.58410"
-        mapbox:zoom_min="1"
-        mapbox:zoom="10"/>
+        mapbox:center_latitude="8.948474"
+        mapbox:center_longitude="79.948241"
+        mapbox:zoom_min="0"
+        mapbox:zoom="9"
+        mapbox:zoom_max="12"
+        mapbox:my_location_enabled="true"
+         />
 
     <ProgressBar
         android:id="@+id/progress_bar"

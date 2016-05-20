@@ -252,7 +252,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
         OfflineTilePyramidRegionDefinition definition = new OfflineTilePyramidRegionDefinition(
                 mapView.getStyleUrl(),
                 latLngBounds,
-                0,
+                5,
                 12,
                 this.getResources().getDisplayMetrics().density);
 
