@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="enterAlways|enterAlwaysCollapsed"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
         </android.support.v7.widget.Toolbar>
@@ -27,7 +27,7 @@
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="450px"
+            android:layout_height="235dp"
             app:tabMode="fixed"
             app:tabGravity="fill">
 
@@ -60,7 +60,7 @@
                     android:layout_below="@+id/circleView"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:textSize="40dp"/>
+                    android:textSize="30dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|center"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_input_add" />
+        android:src="@android:drawable/ic_input_add"
+        android:tint="#ffff"/>
 
 </android.support.design.widget.CoordinatorLayout>

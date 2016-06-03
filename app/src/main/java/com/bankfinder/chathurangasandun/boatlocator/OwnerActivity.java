@@ -1,28 +1,41 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
-public class OwnerActivity extends AppCompatActivity {
+public class OwnerActivity extends AppCompatActivity  implements   AddFisherManDialog.OnCompleteListener{
 
     ImageView imageView;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView recyclerView;
+
+
+    ArrayList<String> fishermanList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +48,21 @@ public class OwnerActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                AddFisherManDialog addFisherManDialog = new AddFisherManDialog();
+                addFisherManDialog.show(getSupportFragmentManager(),"");
+
             }
         });
+
+        //add fiherman
+        fishermanList.add(0,"siripala");
+        fishermanList.add(1,"kumara");
+        fishermanList.add(2,"nadun");
+        fishermanList.add(3,"pramoj");
+        fishermanList.add(4,"pramoj");
+        fishermanList.add(5,"pramoj");
+        fishermanList.add(6,"pramoj");
 
 
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),R.drawable.background);
@@ -48,25 +72,38 @@ public class OwnerActivity extends AppCompatActivity {
         circularImageView.setImageBitmap(circularBitmap);
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.owner_recycle);
+        mAdapter = new OwnerAdapter (fishermanList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(mAdapter);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(new String[]{"a","b","c","d"});
-        mRecyclerView.setAdapter(mAdapter);
-
-
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Log.d("FisjerList",fishermanList.get(position));
+                Toast.makeText(getApplicationContext(), fishermanList.get(position), Toast.LENGTH_SHORT).show();
 
 
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
 
+    }
+
+    @Override
+    public void onComplete(String name) {
+
+        Log.i("OwnerActivity", name);
+        fishermanList.add(fishermanList.size(),name);
+        mAdapter.notifyDataSetChanged();
 
     }
 
@@ -118,4 +155,58 @@ public class OwnerActivity extends AppCompatActivity {
             return mDataset.length;
         }
     }
+
+
+    public interface ClickListener {
+        void onClick(View view, int position);
+
+        void onLongClick(View view, int position);
+    }
+
+
+
+
+    public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+
+        private GestureDetector gestureDetector;
+        private  OwnerActivity.ClickListener clickListener;
+
+        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final OwnerActivity.ClickListener clickListener) {
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clickListener != null) {
+                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+                clickListener.onClick(child, rv.getChildPosition(child));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    }
+
 }

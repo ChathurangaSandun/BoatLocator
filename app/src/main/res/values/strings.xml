@@ -197,6 +197,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_owner">OwnerActivity</string>
+    <string name="add_today_fisher_man">Add Today Fisher Man</string>
 
 
 </resources>
