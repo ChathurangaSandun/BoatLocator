@@ -35,5 +35,7 @@ dependencies {
         transitive=true
     }
 
+    compile 'de.hdodenhof:circleimageview:1.2.1'
+
 
 }
