@@ -19,7 +19,7 @@ import android.widget.Toast;
  */
 public class LocationService extends Service {
     public static final String BROADCAST_ACTION = "Hello World";
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
+    private static final int TEN_MINUTES = 1000 * 60 * 1;
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
@@ -31,10 +31,12 @@ public class LocationService extends Service {
     public void onCreate() {
         super.onCreate();
         intent = new Intent(BROADCAST_ACTION);
+        Log.i("Location", "start______________________ ");
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
+        //Log.i("Location", "start______________________ ");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         listener = new MyLocationListener();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -47,8 +49,8 @@ public class LocationService extends Service {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 4000, 0, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TEN_MINUTES , 1000, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_MINUTES, 1000, listener);
     }
 
     @Override
@@ -64,8 +66,8 @@ public class LocationService extends Service {
 
         // Check whether the new location fix is newer or older
         long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isSignificantlyNewer = timeDelta > TEN_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TEN_MINUTES;
         boolean isNewer = timeDelta > 0;
 
         // If it's been more than two minutes since the current location, use the new location
@@ -149,14 +151,16 @@ public class LocationService extends Service {
 
         public void onLocationChanged(final Location loc)
         {
-            Log.i("****************", "Location changed");
+            Log.i("Locationn", "Location changed");
             if(isBetterLocation(loc, previousBestLocation)) {
-                loc.getLatitude();
-                loc.getLongitude();
+                double latitude = loc.getLatitude();
+                double longitude = loc.getLongitude();
                 intent.putExtra("Latitude", loc.getLatitude());
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
+
+                Log.i("Locationpoits",latitude + " " +longitude );
 
             }
         }
