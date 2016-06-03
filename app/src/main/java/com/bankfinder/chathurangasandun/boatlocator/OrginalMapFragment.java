@@ -142,7 +142,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
         }else{
             Log.d(TAG, "completed");
 
-            LocationService locationService = new LocationService();
+
 
         }
 
@@ -201,7 +201,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
                     path.add(loc);
 
                     Drawable iconDrawable1 = ContextCompat.getDrawable(getActivity(), R.drawable.my_boat); //http://www.flaticon.com/free-icon/sailboat_116500
-                    Icon icon1 = iconFactory.fromDrawable(iconDrawable);
+                    Icon icon1 = iconFactory.fromDrawable(iconDrawable1);
 
 
 
@@ -226,7 +226,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
 
 
                 if (mapboxMap != null) {
-                    mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12.0f));
+                    //mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12.0f));
                 }
 
                 //nearestBranchLocation = getNearestBranch();
@@ -258,6 +258,10 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
 
             }
         };
+
+
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
