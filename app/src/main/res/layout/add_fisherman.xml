@@ -59,6 +59,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:background="#ffff"
                 />
 
             <Button
@@ -69,7 +70,8 @@
                 android:layout_gravity="center"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/cancel"
-                android:layout_toStartOf="@+id/cancel" />
+                android:layout_toStartOf="@+id/cancel"
+                android:background="#ffff"/>
         </RelativeLayout>
     </LinearLayout>
 
