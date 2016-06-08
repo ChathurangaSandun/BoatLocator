@@ -48,7 +48,7 @@ public class LocationService extends Service {
         super.onCreate();
         intent = new Intent(BROADCAST_ACTION);
         Log.i("Location", "start______________________ ");
-        Parse.initialize(getApplicationContext(), ParseConstrains.APPLICATION_KEY, "05POg0uj2EDTpTiIIQlqixTtYicoltyo0JHsY0Dm");
+        Parse.initialize(getApplicationContext(), ParseConstrains.APPLICATION_KEY, ParseConstrains.CLIENT_KEY);
         this.registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
