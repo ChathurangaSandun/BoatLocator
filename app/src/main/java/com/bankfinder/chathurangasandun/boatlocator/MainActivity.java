@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -23,6 +24,16 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -50,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     String beforePauseLanguage = LanguageSelector.getCurrentLangnuage() ;
     private TabLayout tabLayout;
     private final String TAG = "MainActivity";
+    private AccountHeader headerDrawer;
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +97,112 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+
+        //navigation drawer
+
+        //create navigation drawer
+
+        headerDrawer = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.background)
+                .addProfiles(
+                        new ProfileDrawerItem().withName("Sabdub").withNameShown(true).withEmail("").withIcon(getResources().getDrawable(R.drawable.my_boat))
+
+                )
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+
+                        Log.d("profile", profile.getName().toString());
+
+
+
+
+
+                        return false;
+                    }
+                })
+                .build();
+
+        //if you want to update the items at a later time it is recommended to keep it in a variable
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withDescription("Brief Detail about Bank").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Branch Finder").withDescription("Branch List").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("ATM Finder").withDescription("ATM List").withDescriptionTextColorRes(R.color.colorPrimary).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName("Nearest ATM and Branch").withDescription("View nearest ATM & Branch").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Official Web Site").withDescription("View their official site").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+
+
+
+
+
+//create the drawer and remember the `Drawer` result object
+        drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withAccountHeader(headerDrawer)
+
+                .addDrawerItems(
+                        item1,
+                        item2,
+                        item3,
+                        item4,
+                        item5
+                )
+
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+                        if (drawerItem != null) {
+                            String selectedItem = ((Nameable) drawerItem).getName().getText(MainActivity.this);
+                            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                            if ("Home".equals(selectedItem)) {
+                                Log.d(TAG, "Home");
+
+
+                            }if ("Branch Finder".equals(selectedItem)){
+                                Log.d(TAG, "Branch Finder");
+
+
+                            }else if ("ATM Finder".equals(selectedItem)) {
+                                Log.d(TAG, "ATM Finder");
+
+                            } else if ("Nearest ATM and Branch".equals(selectedItem)) {
+                                Log.d(TAG, "Nearest ATM and Branch");
+
+                            }else if("Check Update".equals(selectedItem)){
+                                Log.d(TAG, "Check Update");
+                            }else if("Developer".equals(selectedItem)){
+                                Log.d(TAG, "Developer");
+
+                            }else if("GitHub".equals(selectedItem)){
+                                Log.d(TAG, "GitHub");
+                            }else if("Official Web Site".equals(selectedItem)){
+                                Log.d(TAG, "Official Web Site");
+                            }
+                            fragmentTransaction.commit();
+                        }
+                        return false;
+                    }
+                })
+                .build();
+
+
+        drawer.addStickyFooterItem(new PrimaryDrawerItem().withName("Check Update").withIcon(getResources().getDrawable(R.drawable.dott)));
+
+        drawer.addStickyFooterItem(new DividerDrawerItem());
+        drawer.addStickyFooterItem(new PrimaryDrawerItem().withName("Developer").withIcon(getResources().getDrawable(R.drawable.dott)));
+
+        drawer.addStickyFooterItem(new DividerDrawerItem());
+        //drawer.addStickyFooterItem(new PrimaryDrawerItem().withName("GitHub").withIcon(getResources().getDrawable(R.drawable.ic_github)));
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+
+
 
 
         viewPager = (ViewPager) findViewById(R.id.veiwPager);
