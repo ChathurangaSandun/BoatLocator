@@ -160,15 +160,11 @@ public class MainActivity extends AppCompatActivity {
                             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                             if ("Home".equals(selectedItem)) {
                                 Log.d(TAG, "Home");
-
-
                             }if ("Branch Finder".equals(selectedItem)){
                                 Log.d(TAG, "Branch Finder");
 
-
                             }else if ("ATM Finder".equals(selectedItem)) {
                                 Log.d(TAG, "ATM Finder");
-
                             } else if ("Nearest ATM and Branch".equals(selectedItem)) {
                                 Log.d(TAG, "Nearest ATM and Branch");
 
