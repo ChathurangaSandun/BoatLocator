@@ -2,8 +2,10 @@ package com.bankfinder.chathurangasandun.boatlocator;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
+import com.bankfinder.chathurangasandun.boatlocator.parse.ParseUtil;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
@@ -48,6 +55,14 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         setContentView(R.layout.activity_owner);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+
+
+
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -85,14 +100,27 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(mAdapter);
 
+
+
+
+
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Log.d("FisjerList",fishermanList.get(position));
                 Toast.makeText(getApplicationContext(), fishermanList.get(position), Toast.LENGTH_SHORT).show();
 
-                DeviceUtil deviceUtil = new DeviceUtil(getApplicationContext()) ;
-                Log.i(TAG, deviceUtil.getDevicekey());
+                //signInToParse();
+                DeviceUtil util =  new DeviceUtil(getApplicationContext());
+                String devicekey = util.getDevicekey();
+
+
+
+                Log.i(TAG, devicekey);
+
+                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(i);
+
 
 
             }
@@ -105,6 +133,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
 
     }
+
 
     @Override
     public void onComplete(String name) {
@@ -216,5 +245,62 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
         }
     }
+
+    public class SignInAsynTask extends AsyncTask<Void,Void,Boolean> {
+
+        String TAG = "AsyncInitSetup";
+        private Context ctx;
+        public SignInAsynTask(Context ctx){
+            this.ctx = ctx;
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            try{
+
+                Parse.initialize(ctx, "2sxxue00oXxn05OTEw0JosIdIIq8XuUTzx4v7E3P", "yj0BVERpwbMHFhE1rzc995RalyjMX12tx6vIUyhH");
+
+                DeviceUtil util =  new DeviceUtil(ctx);
+                String devicekey = util.getDevicekey();
+                String gmailAccount = "nimal@gmadddil.com";//util.getGmailAccount();
+
+                ParseUser parseUser = new ParseUtil().userSignIn(gmailAccount, devicekey);
+
+                if(parseUser != null){
+                    Log.i(TAG, parseUser.getEmail());
+                    return  true;
+                }else{
+                    return false;
+                }
+
+            }
+            catch (Exception e){
+                return false;
+            }
+
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(true){
+
+                Log.i(TAG, "onPostExecute: ddddddddddddddddddddddddddddddddddddddd");
+                //Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                //startActivity(i);
+
+
+            }else{
+                Toast.makeText(getApplicationContext(),"Cannot Log",Toast.LENGTH_LONG);
+            }
+        }
+    }
+
+
+
+
+
+
 
 }

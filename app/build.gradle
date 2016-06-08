@@ -42,4 +42,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 
 
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+
+
 }

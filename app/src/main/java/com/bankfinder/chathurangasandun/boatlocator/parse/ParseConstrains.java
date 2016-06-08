@@ -5,7 +5,7 @@ package com.bankfinder.chathurangasandun.boatlocator.parse;
  */
 public class ParseConstrains {
 
-    public static String APPLICATION_KEY = "";
+    public static String APPLICATION_KEY =  "Vfv5HJF7xfKFxOCimjXoCwn02E42c6U66CnLjitQ";
     public static String CLIENT_KEY = "";
 
 

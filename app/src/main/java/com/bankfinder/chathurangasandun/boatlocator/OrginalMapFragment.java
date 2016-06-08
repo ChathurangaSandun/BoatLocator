@@ -286,6 +286,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
     }
 
 

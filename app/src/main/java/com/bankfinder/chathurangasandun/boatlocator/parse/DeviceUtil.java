@@ -2,9 +2,20 @@ package com.bankfinder.chathurangasandun.boatlocator.parse;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Chathuranga Sandun on 6/4/2016.
@@ -17,6 +28,8 @@ public class DeviceUtil {
         this.ctx =ctx;
     }
 
+    private final String TAG = "DeviceUtil";
+    int level=0;
 
 
 
@@ -34,22 +47,22 @@ public class DeviceUtil {
     }
 
     public String getGmailAccount(){
-        String acc = null;
-        try{
-            AccountManager accountManager = (AccountManager) ctx.getSystemService(ctx.ACCOUNT_SERVICE);
-            Account accounts[] = accountManager.getAccounts();
-            if(accounts ==null){
-                acc = "emulator@test.com";
-            }
-            else{
-                for(Account account: accounts){
-                    if(account.type.equals("com.google")){
-                        acc = account.name;
+            String acc = null;
+            try{
+                AccountManager accountManager = (AccountManager) ctx.getSystemService(ctx.ACCOUNT_SERVICE);
+                Account accounts[] = accountManager.getAccounts();
+                if(accounts ==null){
+                    acc = "emulator@test.com";
+                }
+                else{
+                    for(Account account: accounts){
+                        if(account.type.equals("com.google")){
+                            acc = account.name;
+                        }
                     }
                 }
-            }
-            if(acc==null)
-                acc = "emulator@test.com";
+                if(acc==null)
+                    acc = "emulator@test.com";
 
         }
         catch (Exception e){
@@ -58,6 +71,38 @@ public class DeviceUtil {
         }
         return acc;
     }
+
+    public  String[] getDateAndTime(){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+5:30"));
+        Date currentLocalTime = cal.getTime();
+        DateFormat time = new SimpleDateFormat("HH:mm:ss a");
+// you can get seconds by adding  "...:ss" to it
+        time.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+
+        String localTime = time.format(currentLocalTime);
+
+
+
+
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(cal.getTime());
+
+
+
+
+
+        Log.i(TAG, formattedDate+" "+localTime);
+
+        return new String[]{formattedDate,localTime};
+
+
+    }
+
+
+
+
+
 
 
 }

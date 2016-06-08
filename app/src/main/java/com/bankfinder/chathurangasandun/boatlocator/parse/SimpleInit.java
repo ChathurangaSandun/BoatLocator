@@ -7,13 +7,13 @@ import android.util.Log;
 import com.parse.Parse;
 
 /**
- * Created by Chathuranga Sandun on 6/4/2016.
+ * Created by KP on 27/04/14.
  */
-public class SignUpParsecom extends AsyncTask<Void,Void,Void> {
+public class SimpleInit extends AsyncTask<Void,Void,Void> {
 
     String TAG = "AsyncInitSetup";
     private Context ctx;
-    public SignUpParsecom(Context ctx){
+    public SimpleInit(Context ctx){
         this.ctx = ctx;
     }
     @Override
@@ -22,18 +22,6 @@ public class SignUpParsecom extends AsyncTask<Void,Void,Void> {
         try{
 
             Parse.initialize(ctx, "2sxxue00oXxn05OTEw0JosIdIIq8XuUTzx4v7E3P", "yj0BVERpwbMHFhE1rzc995RalyjMX12tx6vIUyhH");
-
-            DeviceUtil deviceUtil = new DeviceUtil(ctx);
-            String email = deviceUtil.getGmailAccount();
-            Log.i(TAG+"dfd", email);
-            String pwd = "922760047v";
-
-            if(syncUtils.isSyncAccountExists()){
-                Log.i(TAG, "SyncAdapter is already exist");
-            }
-            else{
-                syncUtils.createSyncAccount(email,pwd,email);
-            }
         }
         catch (Exception e){
             e.printStackTrace();

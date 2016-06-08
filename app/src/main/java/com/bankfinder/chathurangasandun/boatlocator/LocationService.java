@@ -2,27 +2,43 @@ package com.bankfinder.chathurangasandun.boatlocator;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
+import com.bankfinder.chathurangasandun.boatlocator.parse.ParseConstrains;
+import com.bankfinder.chathurangasandun.boatlocator.parse.SimpleInit;
+import com.parse.Parse;
+import com.parse.ParseObject;
+
+import bolts.Task;
+
 /**
  * Created by Chathuranga Sandun on 5/20/2016.
  */
 public class LocationService extends Service {
     public static final String BROADCAST_ACTION = "Hello World";
-    private static final int TEN_MINUTES = 1000 * 60 * 1;
+    private static final int TEN_MINUTES = 1000 * 10;
     public LocationManager locationManager;
     public MyLocationListener listener;
     public Location previousBestLocation = null;
+    private int level;
+
+
+    double locationCorection[] = new double[4] ;
+    int locationcount = 0;
 
     Intent intent;
     int counter = 0;
@@ -32,6 +48,8 @@ public class LocationService extends Service {
         super.onCreate();
         intent = new Intent(BROADCAST_ACTION);
         Log.i("Location", "start______________________ ");
+        Parse.initialize(getApplicationContext(), ParseConstrains.APPLICATION_KEY, "05POg0uj2EDTpTiIIQlqixTtYicoltyo0JHsY0Dm");
+        this.registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
     @Override
@@ -49,8 +67,8 @@ public class LocationService extends Service {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TEN_MINUTES , 1000, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_MINUTES, 1000, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TEN_MINUTES , 100, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_MINUTES, 100, listener);
     }
 
     @Override
@@ -143,6 +161,39 @@ public class LocationService extends Service {
         return t;
     }
 
+    private BroadcastReceiver batteryInfoReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            int  health= intent.getIntExtra(BatteryManager.EXTRA_HEALTH,0);
+            int  icon_small= intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL,0);
+            level= intent.getIntExtra(BatteryManager.EXTRA_LEVEL,0);
+            int  plugged= intent.getIntExtra(BatteryManager.EXTRA_PLUGGED,0);
+            boolean  present= intent.getExtras().getBoolean(BatteryManager.EXTRA_PRESENT);
+            int  scale= intent.getIntExtra(BatteryManager.EXTRA_SCALE,0);
+            int  status= intent.getIntExtra(BatteryManager.EXTRA_STATUS,0);
+            String  technology= intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
+            int  temperature= intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
+            int  voltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE,0);
+
+
+            /*Log.i(TAG,
+                    "Health: "+health+"\n"+
+                            "Icon Small:"+icon_small+"\n"+
+                            "Level: "+level+"\n"+
+                            "Plugged: "+plugged+"\n"+
+                            "Present: "+present+"\n"+
+                            "Scale: "+scale+"\n"+
+                            "Status: "+status+"\n"+
+                            "Technology: "+technology+"\n"+
+                            "Temperature: "+temperature+"\n"+
+                            "Voltage: "+voltage+"\n");*/
+
+        }
+
+
+    };
+
 
 
 
@@ -159,6 +210,40 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
+
+
+                if(counter == 0){
+                    counter ++;
+                }else if(counter == 1){
+
+                    String[] dateAndTime = new DeviceUtil(getApplicationContext()).getDateAndTime();
+
+
+                    ParseObject locationobject = new ParseObject("location");
+                    locationobject.put("boatid","1001");
+                    locationobject.put("time",dateAndTime[1]);
+                    locationobject.put("date",dateAndTime[0]);
+                    locationobject.put("lat",latitude);
+                    locationobject.put("long",longitude);
+                    locationobject.put("batry",level);
+                    locationobject.put("passbool",false);
+
+                    Log.i("ServiceLocation",dateAndTime[0]+" "+dateAndTime[1]+" "+latitude+" "+longitude+" "+level);
+
+
+
+
+                    locationobject.saveEventually();
+                    counter=0;
+                }
+
+
+
+
+
+
+
+
 
                 Log.i("Locationpoits",latitude + " " +longitude );
 
@@ -184,4 +269,12 @@ public class LocationService extends Service {
 
 
     }
+
+
+
+
+
+
+
+
 }

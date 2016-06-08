@@ -23,6 +23,10 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +56,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.i("AA", "start");
 
+        /*
+        ParseObject locationobject = new ParseObject("location");
+        locationobject.put("boatid","1001");
+        locationobject.put("time","12.36");
+        locationobject.put("date","2015-5-29");
+        locationobject.put("lat",5);
+        locationobject.put("long",4);
+        locationobject.put("batry",25);
+        locationobject.put("passbool",false);
+
+        try {
+            locationobject.save();
+        } catch (ParseException e
+            e.printStackTrace();
+        }*/
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -71,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
+
+        //start....
         Log.i("MainActicvtiy", "start.................................");
         Intent i = new Intent(this,LocationService.class);
         startService(i);
