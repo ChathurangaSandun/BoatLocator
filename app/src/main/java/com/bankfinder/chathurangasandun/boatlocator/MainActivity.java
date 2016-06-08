@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     String beforePauseLanguage = LanguageSelector.getCurrentLangnuage() ;
     private TabLayout tabLayout;
+    private final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
