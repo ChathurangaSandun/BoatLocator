@@ -2,12 +2,10 @@ package com.bankfinder.chathurangasandun.boatlocator;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
+
 import java.util.ArrayList;
 
 
@@ -33,6 +33,11 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView recyclerView;
+
+
+
+    private final  String TAG = "OwnerActivity";
+
 
 
     ArrayList<String> fishermanList = new ArrayList<>();
@@ -85,6 +90,9 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
             public void onClick(View view, int position) {
                 Log.d("FisjerList",fishermanList.get(position));
                 Toast.makeText(getApplicationContext(), fishermanList.get(position), Toast.LENGTH_SHORT).show();
+
+                DeviceUtil deviceUtil = new DeviceUtil(getApplicationContext()) ;
+                Log.i(TAG, deviceUtil.getDevicekey());
 
 
             }
