@@ -100,7 +100,13 @@ public class DeviceUtil {
     }
 
 
+/* sim details
+TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+String getSimSerialNumber = telemamanger.getSimSerialNumber();
+String getSimNumber = telemamanger.getLine1Number();
 
+<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+ */
 
 
 

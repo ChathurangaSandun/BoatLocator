@@ -29,4 +29,13 @@
         android:id="@+id/TVgps"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Process"
+        android:id="@+id/btProcess"
+        android:layout_below="@+id/TVgps"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="94dp" />
 </RelativeLayout>

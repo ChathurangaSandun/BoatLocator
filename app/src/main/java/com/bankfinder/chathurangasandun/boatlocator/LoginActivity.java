@@ -3,6 +3,7 @@ package com.bankfinder.chathurangasandun.boatlocator;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -104,7 +106,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
                 //check database
-
 
 
 
