@@ -34,10 +34,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -103,9 +112,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                String username = mEmailView.getText().toString();
+                String password = mPasswordView.getText().toString();
+
+                if(!(username.isEmpty() && password.isEmpty())){
+                    checkAuth(username,password);
+                }else{
+
+                }
 
 
-                //check database
 
 
 
@@ -115,14 +131,81 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
-                startActivity(new Intent(getApplication(), MainActivity.class));
+
+
+
+
+
+                //startActivity(new Intent(getApplication(), MainActivity.class));
 
                 //attemptLogin();
             }
+
+
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private void checkAuth(final String username, final String password) {
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = ServerConstrants.SERVEWR_URL+"connections/login/FirstOfficerLogin.php";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.i(TAG, response);
+
+
+                        if(response == "1"){
+
+                        }else{
+
+                        }
+
+
+
+
+
+
+
+
+
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
     }
 
     private void populateAutoComplete() {
@@ -192,26 +275,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            //mPasswordView.setError(getString(R.string.error_invalid_password));
+            //focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            //mEmailView.setError(getString(R.string.error_field_required));
+            //focusView = mEmailView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            //mEmailView.setError(getString(R.string.error_invalid_email));
+            //focusView = mEmailView;
             cancel = true;
         }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
-            focusView.requestFocus();
+//            focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
