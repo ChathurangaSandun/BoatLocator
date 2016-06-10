@@ -171,7 +171,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void checkAuth(final String username, final String password) {
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = ServerConstrants.SERVEWR_URL+"connections/login/FirstOfficerLogin.php";
+              String url = ServerConstrants.SERVEWR_URL+"connections/login/FirstOfficerLogin.php";
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
