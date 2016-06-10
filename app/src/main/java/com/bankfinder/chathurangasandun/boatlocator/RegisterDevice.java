@@ -7,8 +7,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class RegisterDevice extends AppCompatActivity {
+
+
+    EditText etOwnerName;
+    Button btSearchOwner;
+
+
+
+
+
+
+
+
+    String ownerID;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +45,32 @@ public class RegisterDevice extends AppCompatActivity {
 
         CardView cvOwner = (CardView) findViewById(R.id.cvOwner);
         cvOwner.setRadius(5);
+
+        initComponents();
+
+
+    }
+
+    private void initComponents() {
+        etOwnerName = (EditText) findViewById(R.id.etSearchOwner);
+        btSearchOwner = (Button) findViewById(R.id.btSearchOwner);
+
+        btSearchOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ownerName = etOwnerName.getText().toString();
+                String isHaveOwner = checkOwnerName(ownerName);
+
+            }
+        });
+
+
+
+
+    }
+
+    private String checkOwnerName(String ownerName) {
+
 
 
     }

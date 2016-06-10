@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Search"
-                    android:id="@+id/btSearch"
+                    android:id="@+id/btSearchOwner"
                     android:padding="10dp"
                     android:elevation="0dp"
                     android:background="#ffff"
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="cancel"
-                    android:id="@+id/btCancel"
+                    android:id="@+id/btCancelOwner"
                     android:padding="10dp"
                     android:elevation="0dp"
                     android:background="#ffff"
@@ -163,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Select"
-                    android:id="@+id/btSelect"
+                    android:id="@+id/btSelectOwner"
                     android:padding="10dp"
                     android:elevation="0dp"
                     android:background="#ffff"
@@ -282,7 +282,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="Small Text"
+                            android:text=""
                             android:id="@+id/textView6"
                             android:layout_weight="75"/>
                     </LinearLayout>
@@ -309,7 +309,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="Small Text"
+                            android:text=""
                             android:id="@+id/textView9"
                             android:layout_weight="75"/>
                     </LinearLayout>
@@ -383,7 +383,7 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cvOwnefr"
                 android:layout_width="fill_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 card_view:cardCornerRadius="4dp"
                 android:background="#ffff"
                 card_view:cardBackgroundColor="#ffff"
@@ -446,7 +446,105 @@
                                 android:text="Enter Boat Details"
                                 android:id="@+id/textViewdd6dss" />
                         </LinearLayout>
+
+
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/activity_vertical_margin"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:paddingTop="@dimen/activity_horizontal_margin">
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/etSearchBoatID"
+
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Boat ID"
+                                    android:imeActionLabel=""
+                                    android:imeOptions="actionUnspecified"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    />
+
+                            </android.support.design.widget.TextInputLayout>
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="16dp"
+                            android:paddingBottom="16dp"
+                            android:weightSum="100">
+
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Search"
+                                android:id="@+id/btSearchBoat"
+                                android:padding="10dp"
+                                android:elevation="0dp"
+                                android:background="#ffff"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_weight="75"/>
+
+                            <Space
+                                android:layout_width="100px"
+                                android:layout_height="20px" />
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="cancel"
+                                android:id="@+id/btCancelBoat"
+                                android:padding="10dp"
+                                android:elevation="0dp"
+                                android:background="#ffff"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_weight="25"/>
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Select"
+                                android:id="@+id/btSelectBoat"
+                                android:padding="10dp"
+                                android:elevation="0dp"
+                                android:background="#ffff"
+                                style="?android:attr/borderlessButtonStyle"
+                                android:layout_weight="25"
+                                android:layout_marginRight="10dp"/>
+
+
+
+
+                        </LinearLayout>
+
+
+
+
+
+
+
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
