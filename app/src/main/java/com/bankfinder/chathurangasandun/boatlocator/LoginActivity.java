@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.android.volley.AuthFailureError;
@@ -42,11 +45,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
+import android.support.v7.app.AlertDialog;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
+
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -58,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     private final String  TAG = "LoginActivity";
+    AlertDialog.Builder alertDialogBuilder;
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -85,6 +94,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public  static String local = "sl";
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +119,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+
+
+
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -118,6 +133,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if(!(username.isEmpty() && password.isEmpty())){
                     checkAuth(username,password);
                 }else{
+
+
+
+                    Toast.makeText(getApplicationContext(),"Field must not empty",Toast.LENGTH_LONG);
+                    //TODO : create alert box
 
                 }
 
@@ -164,8 +184,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         if(response == "1"){
 
-                        }else{
 
+                        }else{
+                            Log.i(TAG, "onResponse: cannot log");
+                            //TODO : create alert box
                         }
 
 
