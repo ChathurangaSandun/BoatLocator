@@ -1,5 +1,6 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,12 +33,20 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+
+
 public class RegisterDevice extends AppCompatActivity {
 
 
     private static final String TAG = "RegisterDevicd" ;
     EditText etOwnerName;
     Button btSearchOwner;
+
+    RequestQueue queue ;
+
+    private ProgressDialog pDialog;
 
 
 
@@ -48,6 +57,10 @@ public class RegisterDevice extends AppCompatActivity {
 
     String ownerID;
 
+    String ownerid;
+    JSONArray ownerBoats;
+
+
 
 
     @Override
@@ -57,6 +70,8 @@ public class RegisterDevice extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        queue= Volley.newRequestQueue(this);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +80,10 @@ public class RegisterDevice extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
 
         CardView cvOwner = (CardView) findViewById(R.id.cvOwner);
         cvOwner.setRadius(5);
@@ -82,7 +101,14 @@ public class RegisterDevice extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String ownerName = etOwnerName.getText().toString();
-                String isHaveOwner = checkOwnerName(ownerName);
+
+                if(!ownerName.isEmpty()){
+                    checkOwnerName(ownerName);
+                }else{
+                    //TODO: create error message empty message
+
+                }
+
 
 
             }
@@ -93,10 +119,10 @@ public class RegisterDevice extends AppCompatActivity {
 
     }
 
-    private String checkOwnerName(final String ownerName) {
+    private void checkOwnerName(final String ownerName) {
 
-        RequestQueue queue = Volley.newRequestQueue(this);
 
+        showpDialog();
 
         final String searchownerURL = ServerConstrants.SERVEWR_URL+"connections/owner/SearchOwnerName.php?ownername="+ownerName;
         Log.i(TAG, "checkOwnerName: "+searchownerURL);
@@ -107,8 +133,30 @@ public class RegisterDevice extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d(TAG, response.toString());
+                try {
+
+                    String responses = response.getString("ownerid");
+
+                    if(responses.equals("0")){
+                        //TODO :eeror messsage - there is no owner that name
+                        ownerid = "";
+                        ownerBoats = null;
+                    }else if(responses.equals("-1")){
+                        //TODO :eeror messsage - there is empty feild
+                        ownerid = "";
+                        ownerBoats=null;
+                    }else{
+                        ownerid = responses;
+                        ownerBoats = response.getJSONArray("boats");
+                    }
 
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    ownerid = "";
+                    ownerBoats=null;
+                }
+                hidepDialog();
 
 
             }
@@ -120,6 +168,9 @@ public class RegisterDevice extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         error.getMessage(), Toast.LENGTH_SHORT).show();
                 // hide the progress dialog
+                ownerid = "";
+                ownerBoats=null;
+                hidepDialog();
 
             }
         });
@@ -130,65 +181,16 @@ public class RegisterDevice extends AppCompatActivity {
 
 
 
+    }
 
+    private void showpDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
 
-
-
-
-/*
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, searchownerURL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        Log.i(TAG, response);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: "+error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("ownername", ownerName);
-                return params;
-            }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-
-
-
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);*/
-
-
-
-
-        return "";
+    private void hidepDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
 }
