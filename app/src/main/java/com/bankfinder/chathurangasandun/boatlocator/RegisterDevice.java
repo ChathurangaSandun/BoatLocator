@@ -1,6 +1,7 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
 import android.app.ProgressDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -43,8 +44,8 @@ public class RegisterDevice extends AppCompatActivity {
 
 
     private static final String TAG = "RegisterDevicd" ;
-    EditText etOwnerName;
-    Button btSearchOwner;
+    EditText etOwnerName,etSearchBoatID;
+    Button btSearchOwner,btSelectOwner,btCancelOwner,btSelectBoat,btCancelBoat;
     TextView tvImei,tvSim,tvProvider,tvMobile,tvimeminuber;
 
     RequestQueue queue ;
@@ -53,15 +54,17 @@ public class RegisterDevice extends AppCompatActivity {
 
 
 
+    boolean isOwnerSelect = false;
+    boolean isBoatSelect = false;
 
 
 
 
+    String boatid="";
+    String selectedBoat="";
 
-    String ownerID;
-
-    String ownerid;
-    JSONArray ownerBoats;
+    String ownerid = "";
+    JSONArray ownerBoats = null;
 
 
 
@@ -76,14 +79,6 @@ public class RegisterDevice extends AppCompatActivity {
 
         queue= Volley.newRequestQueue(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Please wait...");
@@ -139,8 +134,125 @@ public class RegisterDevice extends AppCompatActivity {
 
 
 
+        btSelectOwner = (Button) findViewById(R.id.btSelectOwner);
+        btSelectOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!ownerid.equals("")){
+                    etOwnerName.setEnabled(false);
+                    isOwnerSelect = true;
+
+                }
+            }
+        });
+
+        btCancelOwner= (Button) findViewById(R.id.btCancelOwner);
+        btCancelOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isOwnerSelect){
+                    etOwnerName.setEnabled(true);
+                    isOwnerSelect = false;
+                    ownerid = "";
+                    ownerBoats=null;
+                    ((TextView)findViewById(R.id.textView6ss)).setText("Select The Owner");
+
+                }
+
+            }
+        });
+
+
+
+        etSearchBoatID = (EditText) findViewById(R.id.etSearchBoatID);
+        btSelectBoat= (Button) findViewById(R.id.btSelectBoat);
+        btSelectBoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boatid = etSearchBoatID.getText().toString();
+                if(!boatid.isEmpty()){
+
+                    if(ownerBoats != null){
+                        for(int i = 0;i<ownerBoats.length();i++){
+                            try {
+                                if(boatid.equals(ownerBoats.get(i))){
+                                    selectedBoat = boatid;
+                                    etSearchBoatID.setEnabled(false);
+                                    isBoatSelect= true;
+
+                                    //textViewdd6dss
+                                    ((TextView)findViewById(R.id.textViewdd6dss)).setText(selectedBoat);
+
+                                    break;
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+                    }else{
+                        //TODO enter correct boatid
+                    }
+
+                }else{
+                    //TODO error empty message
+                }
+
+
+
+            }
+        });
+
+
+        btCancelBoat= (Button) findViewById(R.id.btCancelBoat);
+        btCancelBoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etSearchBoatID.setEnabled(true);
+                etSearchBoatID.setText("");
+                selectedBoat = "";
+                isBoatSelect = false;
+                ((TextView)findViewById(R.id.textViewdd6dss)).setText("Enter Boat Detail");
+            }
+        });
+
+
+
+
+        //fab
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s = registerDeviceData();
+                Log.i(TAG, "onClick: "+s);
+
+
+                if(!selectedBoat.equals("") && !ownerid.equals("")){
+                    //String s = registerDeviceData();
+                }else{
+                    //TODO error not selected wanted fields
+                }
+            }
+        });
+
 
     }
+
+    private String registerDeviceData() {
+        Uri build = new Uri.Builder()
+                .scheme("http")
+                .authority(ServerConstrants.SERVEWR_URL)
+                .path("/connections/owner/SearchOwnerName.php")
+                .appendQueryParameter("param1", "name")
+                .appendQueryParameter("param2", "age")
+                .build();
+
+        return  build.toString();
+    }
+
 
     private void checkOwnerName(final String ownerName) {
 
@@ -162,6 +274,7 @@ public class RegisterDevice extends AppCompatActivity {
 
                     if(responses.equals("0")){
                         //TODO :eeror messsage - there is no owner that name
+                        Toast.makeText(getApplicationContext(),"there is no owner that name",Toast.LENGTH_LONG);
                         ownerid = "";
                         ownerBoats = null;
                     }else if(responses.equals("-1")){
@@ -171,6 +284,9 @@ public class RegisterDevice extends AppCompatActivity {
                     }else{
                         ownerid = responses;
                         ownerBoats = response.getJSONArray("boats");
+                        isOwnerSelect = true;
+                        etOwnerName.setEnabled(false);
+                        ((TextView)findViewById(R.id.textView6ss)).setText(etOwnerName.getText());
                     }
 
 
