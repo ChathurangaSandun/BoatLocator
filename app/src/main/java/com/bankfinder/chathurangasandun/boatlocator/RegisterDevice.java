@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
 import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 
 import org.json.JSONArray;
@@ -43,6 +45,7 @@ public class RegisterDevice extends AppCompatActivity {
     private static final String TAG = "RegisterDevicd" ;
     EditText etOwnerName;
     Button btSearchOwner;
+    TextView tvImei,tvSim,tvProvider,tvMobile,tvimeminuber;
 
     RequestQueue queue ;
 
@@ -59,6 +62,7 @@ public class RegisterDevice extends AppCompatActivity {
 
     String ownerid;
     JSONArray ownerBoats;
+
 
 
 
@@ -113,6 +117,25 @@ public class RegisterDevice extends AppCompatActivity {
 
             }
         });
+
+
+        tvImei =(TextView) findViewById(R.id.tvImei);
+        tvSim =(TextView) findViewById(R.id.tvsim);
+        tvProvider =(TextView) findViewById(R.id.tvProvider);
+        tvMobile =(TextView) findViewById(R.id.tvMobile);
+        tvimeminuber=(TextView) findViewById(R.id.tvimeiNumber);
+
+
+        DeviceUtil util = new DeviceUtil(getApplicationContext());
+        tvImei.setText(util.getDevicekey());
+        tvimeminuber.setText(" "+util.getDevicekey());
+
+        String[] simNumber = util.getSimNumber();
+
+        tvSim.setText("  "+simNumber[1]);
+        tvMobile.setText("- 0718256773");
+
+        tvProvider.setText("- Mobitel");//TODO set provider
 
 
 

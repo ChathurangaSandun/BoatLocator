@@ -282,8 +282,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text=""
-                            android:id="@+id/textView6"
+                            android:id="@+id/tvimeiNumber"
                             android:layout_weight="75"/>
                     </LinearLayout>
 
@@ -309,8 +308,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text=""
-                            android:id="@+id/textView9"
+                            android:id="@+id/tvsim"
                             android:layout_weight="75"/>
                     </LinearLayout>
 
@@ -336,8 +334,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text=""
-                            android:id="@+id/textView8"
+                            android:id="@+id/tvProvider"
                             android:layout_weight="75"/>
                     </LinearLayout>
 
@@ -363,8 +360,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text=""
-                            android:id="@+id/textView12"
+                            android:id="@+id/tvMobile"
                             android:layout_weight="75"/>
                     </LinearLayout>
 
@@ -493,19 +489,10 @@
                             android:weightSum="100">
 
 
-                            <Button
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Search"
-                                android:id="@+id/btSearchBoat"
-                                android:padding="10dp"
-                                android:elevation="0dp"
-                                android:background="#ffff"
-                                style="?android:attr/borderlessButtonStyle"
-                                android:layout_weight="75"/>
+
 
                             <Space
-                                android:layout_width="100px"
+                                android:layout_width="135dp"
                                 android:layout_height="20px" />
 
                             <Button

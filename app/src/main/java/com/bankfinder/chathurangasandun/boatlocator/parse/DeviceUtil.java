@@ -99,6 +99,15 @@ public class DeviceUtil {
 
     }
 
+    public String[] getSimNumber(){
+        TelephonyManager telemamanger = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        String getSimSerialNumber = telemamanger.getSimSerialNumber();
+        String getSimNumber = telemamanger.getLine1Number();
+
+        return new String[]{getSimNumber,getSimSerialNumber};
+
+    }
+
 
 /* sim details
 TelephonyManager telemamanger = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
