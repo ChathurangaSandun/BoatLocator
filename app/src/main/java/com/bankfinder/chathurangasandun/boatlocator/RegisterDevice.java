@@ -66,7 +66,9 @@ public class RegisterDevice extends AppCompatActivity {
     String ownerid = "";
     JSONArray ownerBoats = null;
 
+    String responseReg;
 
+    String imei, sim,mobile,provider;
 
 
 
@@ -122,15 +124,19 @@ public class RegisterDevice extends AppCompatActivity {
 
 
         DeviceUtil util = new DeviceUtil(getApplicationContext());
-        tvImei.setText(util.getDevicekey());
-        tvimeminuber.setText(" "+util.getDevicekey());
+        imei=util.getDevicekey();
+        tvImei.setText(imei);
+        tvimeminuber.setText(" "+imei);
 
         String[] simNumber = util.getSimNumber();
+        sim = simNumber[1];
+        mobile = "0718256773";
+        provider="Mobitel";
 
-        tvSim.setText("  "+simNumber[1]);
-        tvMobile.setText("- 0718256773");
+        tvSim.setText("  "+sim);
+        tvMobile.setText("- "+mobile);
 
-        tvProvider.setText("- Mobitel");//TODO set provider
+        tvProvider.setText("- "+provider);//TODO set provider
 
 
 
@@ -226,12 +232,11 @@ public class RegisterDevice extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = registerDeviceData();
-                Log.i(TAG, "onClick: "+s);
-
-
                 if(!selectedBoat.equals("") && !ownerid.equals("")){
-                    //String s = registerDeviceData();
+                    String responseRegData = registerDeviceData();
+
+
+
                 }else{
                     //TODO error not selected wanted fields
                 }
@@ -242,10 +247,65 @@ public class RegisterDevice extends AppCompatActivity {
     }
 
     private String registerDeviceData() {
+
+
+        String url = ServerConstrants.SERVEWR_URL+"onnections/owner/RegisterDevice.php";
+
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.i(TAG, response);
+                        responseReg =response;
+
+
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: "+error);
+                responseReg=error.getMessage();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("ownerid", ownerid);
+                params.put("boatid", boatid);
+                params.put("deviceid", imei);
+                params.put("provider", provider);
+                params.put("sim", sim);
+                params.put("mobile", mobile);
+
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
+        return responseReg;
+
+    }
+
+    private String getURL() {
         Uri build = new Uri.Builder()
-                .scheme("http")
-                .authority(ServerConstrants.SERVEWR_URL)
-                .path("/connections/owner/SearchOwnerName.php")
+
+                .path(ServerConstrants.SERVEWR_URL+"connections/owner/RegisterDevice.php")
                 .appendQueryParameter("param1", "name")
                 .appendQueryParameter("param2", "age")
                 .build();
