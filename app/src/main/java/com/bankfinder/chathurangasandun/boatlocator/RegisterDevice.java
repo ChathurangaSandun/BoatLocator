@@ -1,10 +1,14 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -71,6 +75,10 @@ public class RegisterDevice extends AppCompatActivity {
     String imei, sim,mobile,provider;
 
 
+    DeviceUtil util;
+
+    AlertDialog.Builder alertDialogBuilder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +88,12 @@ public class RegisterDevice extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         queue= Volley.newRequestQueue(this);
+
+
+        //alertbox
+         alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Are you sure,You wanted to make decision");
+
 
 
         pDialog = new ProgressDialog(this);
@@ -107,6 +121,16 @@ public class RegisterDevice extends AppCompatActivity {
                     checkOwnerName(ownerName);
                 }else{
                     //TODO: create error message empty message
+                    alertDialogBuilder.setMessage("Cannot Owner name  Empty");
+                    alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    alertDialog.show();
 
                 }
 
@@ -123,7 +147,8 @@ public class RegisterDevice extends AppCompatActivity {
         tvimeminuber=(TextView) findViewById(R.id.tvimeiNumber);
 
 
-        DeviceUtil util = new DeviceUtil(getApplicationContext());
+
+        util = new DeviceUtil(getApplicationContext());
         imei=util.getDevicekey();
         tvImei.setText(imei);
         tvimeminuber.setText(" "+imei);
@@ -199,10 +224,30 @@ public class RegisterDevice extends AppCompatActivity {
 
                     }else{
                         //TODO enter correct boatid
+                        alertDialogBuilder.setMessage("Please enter correct BoatID");
+                        alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+
+                        alertDialog.show();
                     }
 
                 }else{
                     //TODO error empty message
+                    alertDialogBuilder.setMessage("Cannot Boat Number  Empty");
+                    alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    alertDialog.show();
                 }
 
 
@@ -237,8 +282,19 @@ public class RegisterDevice extends AppCompatActivity {
 
 
 
+
                 }else{
                     //TODO error not selected wanted fields
+                    alertDialogBuilder.setMessage("Cannot put  your fields Empty");
+                    alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    alertDialog.show();
                 }
             }
         });
@@ -249,7 +305,7 @@ public class RegisterDevice extends AppCompatActivity {
     private String registerDeviceData() {
 
 
-        String url = ServerConstrants.SERVEWR_URL+"onnections/owner/RegisterDevice.php";
+        String url = ServerConstrants.SERVEWR_URL+"connections/device/RegisterDevice.php";
 
 
 // Request a string response from the provided URL.
@@ -260,6 +316,43 @@ public class RegisterDevice extends AppCompatActivity {
                         // Display the first 500 characters of the response string.
                         Log.i(TAG, response);
                         responseReg =response;
+
+                        if(responseReg.equals("1")){
+                            alertDialogBuilder.setMessage("Device is Successfully Registed");
+                            alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    saveData();
+                                    startActivity(new Intent(getApplicationContext(),OwnerActivity.class));
+
+                                    finish();
+
+                                }
+                            });
+
+                            alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            alertDialog.show();
+                        }else{
+                            alertDialogBuilder.setMessage("Device is Not  Registed. Try again");
+                            alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    finish();
+                                }
+                            });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            alertDialog.show();
+                        }
 
 
 
@@ -281,6 +374,7 @@ public class RegisterDevice extends AppCompatActivity {
                 params.put("provider", provider);
                 params.put("sim", sim);
                 params.put("mobile", mobile);
+                params.put("date",util.getDateAndTime()[0] );
 
                 return params;
             }
@@ -337,16 +431,39 @@ public class RegisterDevice extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"there is no owner that name",Toast.LENGTH_LONG);
                         ownerid = "";
                         ownerBoats = null;
+                        alertDialogBuilder.setMessage("Please enter Correct Owner Name");
+                        alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+
+                        alertDialog.show();
+
                     }else if(responses.equals("-1")){
                         //TODO :eeror messsage - there is empty feild
                         ownerid = "";
                         ownerBoats=null;
+                        alertDialogBuilder.setMessage("Cannot owner Name empty");
+                        alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+
+                        alertDialog.show();
                     }else{
                         ownerid = responses;
                         ownerBoats = response.getJSONArray("boats");
                         isOwnerSelect = true;
                         etOwnerName.setEnabled(false);
                         ((TextView)findViewById(R.id.textView6ss)).setText(etOwnerName.getText());
+
+
                     }
 
 
@@ -390,6 +507,15 @@ public class RegisterDevice extends AppCompatActivity {
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    void saveData(){
+        SharedPreferences.Editor editor = getSharedPreferences("DEVICE", MODE_PRIVATE).edit();
+        editor.putString("Owner", ownerid);
+        editor.putString("imei",tvImei.getText().toString());
+        editor.putString("Name",etOwnerName.getText().toString());
+        editor.putString("BoatId",etSearchBoatID.getText().toString());
+        editor.commit();
     }
 
 }

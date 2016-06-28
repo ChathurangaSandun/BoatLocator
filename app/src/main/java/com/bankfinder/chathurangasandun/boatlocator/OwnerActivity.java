@@ -2,12 +2,16 @@ package com.bankfinder.chathurangasandun.boatlocator;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,9 +29,8 @@ import android.widget.Toast;
 
 import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
 import com.bankfinder.chathurangasandun.boatlocator.parse.ParseUtil;
-import com.parse.LogInCallback;
+import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -41,11 +44,13 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView recyclerView;
 
+    TextView tvBoatID,tvOwnerName;
+
 
 
     private final  String TAG = "OwnerActivity";
 
-
+    AlertDialog.Builder alertDialogBuilder;
 
     ArrayList<String> fishermanList = new ArrayList<>();
 
@@ -56,11 +61,37 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //alertbox
+        alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Are you sure,You wanted to make decision");
+
+        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(OwnerActivity.this,"You clicked yes button",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+//////////////////////////////////////////////////////////////////////////
+
+        SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
+        String boatID = prefs.getString("BoatId","");
+        String name =  prefs.getString("Name","");
 
 
 
 
-
+        tvBoatID = (TextView) findViewById(R.id.tvBoatID);
+        tvBoatID.setText(boatID);
+        tvOwnerName = (TextView) findViewById(R.id.tvOwnerName);
+        tvOwnerName.setText(name);
 
 
 
@@ -77,12 +108,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
         //add fiherman
         fishermanList.add(0,"siripala");
-        fishermanList.add(1,"kumara");
-        fishermanList.add(2,"nadun");
-        fishermanList.add(3,"pramoj");
-        fishermanList.add(4,"pramoj");
-        fishermanList.add(5,"pramoj");
-        fishermanList.add(6,"pramoj");
+
 
 
         Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),R.drawable.background);
@@ -115,11 +141,13 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                 String devicekey = util.getDevicekey();
 
 
+                insertJourny(fishermanList.get(position));
+
+
 
                 Log.i(TAG, devicekey);
 
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(i);
+
 
 
 
@@ -133,6 +161,133 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
 
     }
+
+    private void insertJourny(String name) {
+
+        alertDialogBuilder.setMessage("Are your your name is "+ name);
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+
+                startActivity(new Intent(getApplication(),MainActivity.class));
+
+
+                finish();
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        alertDialog.show();
+    }
+
+    private String getURL() {
+        Uri build = new Uri.Builder()
+
+                .path(ServerConstrants.SERVEWR_URL+"connections/owner/RegisterDevice.php")
+                .appendQueryParameter("param1", "name")
+                .appendQueryParameter("param2", "age")
+                .build();
+
+        return  build.toString();
+    }
+
+/*
+    private void checkOwnerName(final String fisherman) {
+
+
+        showpDialog();
+
+        final String searchownerURL = ServerConstrants.SERVEWR_URL+"connections/journy/InsertJourny.php?fisherman="+fisherman;
+        Log.i(TAG, "checkOwnerName: "+searchownerURL);
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                searchownerURL, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, response.toString());
+                try {
+
+                    String responses = response.getString("ownerid");
+
+                    if(responses.equals("0")){
+                        //TODO :eeror messsage - there is no owner that name
+                        Toast.makeText(getApplicationContext(),"there is no owner that name",Toast.LENGTH_LONG);
+                        ownerid = "";
+                        ownerBoats = null;
+                    }else if(responses.equals("-1")){
+                        //TODO :eeror messsage - there is empty feild
+                        ownerid = "";
+                        ownerBoats=null;
+                    }else{
+                        ownerid = responses;
+                        ownerBoats = response.getJSONArray("boats");
+                        isOwnerSelect = true;
+                        etOwnerName.setEnabled(false);
+                        ((TextView)findViewById(R.id.textView6ss)).setText(etOwnerName.getText());
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    ownerid = "";
+                    ownerBoats=null;
+                }
+                hidepDialog();
+
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide the progress dialog
+                ownerid = "";
+                ownerBoats=null;
+                hidepDialog();
+
+            }
+        });
+
+
+        queue.add(jsonObjReq);
+
+
+
+
+    }
+
+    private void showpDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hidepDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+    }*/
+
+
+
+
+
+
+
 
 
     @Override
@@ -173,7 +328,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                     .inflate(R.layout.my_text_view, parent, false);
             // set the view's size, margins, paddings and layout parameters
 
-            ViewHolder vh = new ViewHolder((TextView) v.findViewById(R.id.textView));
+            ViewHolder vh = new ViewHolder((TextView) v.findViewById(R.id.tvOwnerName));
             return vh;
         }
 
@@ -246,6 +401,10 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         }
     }
 
+
+
+
+
     public class SignInAsynTask extends AsyncTask<Void,Void,Boolean> {
 
         String TAG = "AsyncInitSetup";
@@ -262,7 +421,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
                 DeviceUtil util =  new DeviceUtil(ctx);
                 String devicekey = util.getDevicekey();
-                String gmailAccount = "nimal@gmadddil.com";//util.getGmailAccount();
+                String gmailAccount = util.getGmailAccount();
 
                 ParseUser parseUser = new ParseUtil().userSignIn(gmailAccount, devicekey);
 
@@ -296,6 +455,9 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
             }
         }
     }
+
+
+
 
 
 

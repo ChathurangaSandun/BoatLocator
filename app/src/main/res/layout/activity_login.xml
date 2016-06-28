@@ -11,6 +11,14 @@
     tools:context="com.bankfinder.chathurangasandun.boatlocator.LoginActivity">
 
     <!-- Login progress -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/logo"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"/>
+
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -30,6 +38,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -38,7 +48,7 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
+                    android:hint="User Name"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />

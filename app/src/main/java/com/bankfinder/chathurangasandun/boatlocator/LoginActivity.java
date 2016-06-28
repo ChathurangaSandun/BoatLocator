@@ -104,6 +104,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+        //alertbox
+        alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Are you sure,You wanted to make decision");
+
+/*        alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(LoginActivity.this,"You clicked yes button",Toast.LENGTH_LONG).show();
+            }
+        });
+*/
+
+
+//////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -137,7 +152,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
                     Toast.makeText(getApplicationContext(),"Field must not empty",Toast.LENGTH_LONG);
-                    //TODO : create alert box
+                    alertDialogBuilder.setMessage("You cannot put feilds are empty");
+                    alertDialogBuilder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+
+
+
+
+
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    alertDialog.show();
 
                 }
 
@@ -182,12 +215,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Log.i(TAG, response);
 
 
-                        if(response == "1"){
+                        if(response.equals("1")){
+
+                            startActivity(new Intent(getApplicationContext(),RegisterDevice.class));
+                            finish();
 
 
                         }else{
                             Log.i(TAG, "onResponse: cannot log");
-                            //TODO : create alert box
+                            alertDialogBuilder.setMessage("Your username or password is wrong!");
+                            alertDialogBuilder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+
+
+
+                                }
+                            });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            alertDialog.show();
                         }
 
 

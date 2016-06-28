@@ -5,5 +5,5 @@ package com.bankfinder.chathurangasandun.boatlocator.server;
  */
 public class ServerConstrants {
 
-    public static final String SERVEWR_URL = "http://192.168.56.1/BoatTrackerPHPConnector/";
+    public static final String SERVEWR_URL = "http://boattracker.esy.es/BoatTrackerPHPConnector/";
 }
