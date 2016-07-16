@@ -1,7 +1,14 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -39,6 +47,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,9 +72,15 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private AccountHeader headerDrawer;
     private Drawer drawer;
+    Intent i;
+
+    private PendingIntent pendingIntent;
+    boolean a= false;
+    Vibrator v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i("AA", "start");
@@ -89,14 +104,43 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+
+
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
+        final Ringtone r = RingtoneManager.getRingtone(getApplication(), notification);
+
+        v = (Vibrator) this.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                if(a){
+                   r.stop();
+                    v.cancel();
+                    a=false;
+                }else{
+                    r.play();
+                    v.vibrate(Integer.MAX_VALUE);
+
+                    a= true;
+                }
+
+
+
+
+
+
+
+                //stopService(i);
             }
         });
+
+
 
 
 
@@ -127,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withDescription("Brief Detail about Bank").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Branch Finder").withDescription("Branch List").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("ATM Finder").withDescription("ATM List").withDescriptionTextColorRes(R.color.colorPrimary).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName("Nearest ATM and Branch").withDescription("View nearest ATM & Branch").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Official Web Site").withDescription("View their official site").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withDescription("see Main  marain map").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Weather").withDescription("Full Weather Details of your area").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("My Trips").withDescription("Path history in last 7 days ").withDescriptionTextColorRes(R.color.colorPrimary).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName("Emergency").withDescription("Inform / SOS facility with authoried people").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Others").withDescription("").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
 
 
 
@@ -155,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
-                        if (drawerItem != null) {
+                        /*if (drawerItem != null) {
                             String selectedItem = ((Nameable) drawerItem).getName().getText(MainActivity.this);
                             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                             if ("Home".equals(selectedItem)) {
@@ -179,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d(TAG, "Official Web Site");
                             }
                             fragmentTransaction.commit();
-                        }
+                        }*/
                         return false;
                     }
                 })
@@ -210,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
         //start....
         Log.i("MainActicvtiy", "start.................................");
-        Intent i = new Intent(this,LocationService.class);
+        i = new Intent(this,LocationService.class);
         startService(i);
     }
 
@@ -298,6 +342,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -326,6 +373,27 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
+
+    /*//alarm system
+    public void start() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000;
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+    }
+
+    public void cancel() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);
+        Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+    }*/
+
+
+
+
+
 
 
 }

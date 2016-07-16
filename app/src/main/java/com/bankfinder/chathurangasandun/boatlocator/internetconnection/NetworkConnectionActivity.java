@@ -25,6 +25,7 @@ import com.bankfinder.chathurangasandun.boatlocator.MainActivity;
 import com.bankfinder.chathurangasandun.boatlocator.OwnerActivity;
 import com.bankfinder.chathurangasandun.boatlocator.R;
 
+import java.security.acl.Owner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -205,24 +206,18 @@ public class NetworkConnectionActivity extends AppCompatActivity {
         btProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                boolean reg = preferences.getBoolean("REG", false); //if false not reg
+                SharedPreferences prefs = getSharedPreferences("REGISTRATION", MODE_PRIVATE);
+                boolean isReg = prefs.getBoolean("REG",false);
+
 
                 if(tvGPs.getText().toString().equals("GPS is Enabled") && !textViewNetwork.getText().toString().equals("Not connected to Internet")){
 
 
-                    if(!reg){
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean("REG",true);
-                        editor.commit();
-
-
-
-
+                    if(!isReg){
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(intent);
                     }else{
-
+                        startActivity(new Intent(getApplication(), Owner.class));
                     }
                 }else{
 

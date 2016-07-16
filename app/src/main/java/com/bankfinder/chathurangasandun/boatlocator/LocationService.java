@@ -6,17 +6,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bankfinder.chathurangasandun.boatlocator.mypolygon.Point;
 import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
 import com.bankfinder.chathurangasandun.boatlocator.parse.ParseConstrains;
 import com.bankfinder.chathurangasandun.boatlocator.parse.SimpleInit;
@@ -35,6 +41,10 @@ public class LocationService extends Service {
     public MyLocationListener listener;
     public Location previousBestLocation = null;
     private int level;
+     Ringtone r;
+    Vibrator vibrator;
+
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon  outerBoader;
 
 
     double locationCorection[] = new double[4] ;
@@ -50,6 +60,26 @@ public class LocationService extends Service {
         Log.i("Location", "start______________________ ");
         Parse.initialize(getApplicationContext(), ParseConstrains.APPLICATION_KEY, ParseConstrains.CLIENT_KEY);
         this.registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
+
+        r = RingtoneManager.getRingtone(getApplication(), notification);
+
+        vibrator = (Vibrator) this.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+        //drawBoader();
+    }
+
+    private void drawBoader() {
+
+
+        outerBoader = com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon.Builder()
+                .addVertex(new Point(6.760339f, 80.059024f))
+                .addVertex(new Point(6.717031f, 80.027027f))
+                .addVertex(new Point(6.692394f, 80.130658f))
+                .addVertex(new Point(6.744053f, 80.176711f))
+                .addVertex(new Point(6.819090f, 80.160090f))
+                .build();
     }
 
     @Override
@@ -211,6 +241,10 @@ public class LocationService extends Service {
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
 
+                //check inside the boader
+                //checkInsideTheBoarder((float)latitude,(float) longitude);
+
+
 
                 if(counter == 0){
                     counter ++;
@@ -219,8 +253,12 @@ public class LocationService extends Service {
                     String[] dateAndTime = new DeviceUtil(getApplicationContext()).getDateAndTime();
 
 
+                    SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
+                    String boatID = prefs.getString("BoatId","COLO001-101");
+
+
                     ParseObject locationobject = new ParseObject("location");
-                    locationobject.put("boatid","1001");
+                    locationobject.put("boatid",boatID);
                     locationobject.put("time",dateAndTime[1]);
                     locationobject.put("date",dateAndTime[0]);
                     locationobject.put("lat",latitude);
@@ -270,9 +308,18 @@ public class LocationService extends Service {
 
     }
 
+    private void checkInsideTheBoarder(float latitude, float longitude) {
+        if(outerBoader.contains(new Point(latitude,longitude))){
+            r.stop();
+            vibrator.cancel();
+            Log.i("Location polygon", "in");
+        }else{
+            r.play();
+            vibrator.vibrate(Integer.MAX_VALUE);
+            Log.i("Location polygon", "out");
+        }
 
-
-
+    }
 
 
 

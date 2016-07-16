@@ -8,9 +8,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -23,7 +25,7 @@ import com.bankfinder.chathurangasandun.boatlocator.internetconnection.NetworkCo
 public class SplashActivity extends AppCompatActivity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 20000;
+    private static int SPLASH_TIME_OUT = 10000;
     private KenBurnsView mKenBurns;
 
     @Override
@@ -51,6 +53,11 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         }, SPLASH_TIME_OUT);
+
+        SharedPreferences prefs = getSharedPreferences("REGISTRATION", MODE_PRIVATE);
+        boolean isReg = prefs.getBoolean("REG",false);
+
+        Log.i("reg", "saveData: "+isReg);
     }
 
     private void setAnimation() {

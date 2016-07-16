@@ -323,6 +323,7 @@ public class RegisterDevice extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     saveData();
+
                                     startActivity(new Intent(getApplicationContext(),OwnerActivity.class));
 
                                     finish();
@@ -516,6 +517,23 @@ public class RegisterDevice extends AppCompatActivity {
         editor.putString("Name",etOwnerName.getText().toString());
         editor.putString("BoatId",etSearchBoatID.getText().toString());
         editor.commit();
+
+
+
+
+        SharedPreferences.Editor editor2 = getSharedPreferences("REGISTRATION", MODE_PRIVATE).edit();
+        editor.putBoolean("REG", true);
+        editor.commit();
+
+
+        SharedPreferences prefs = getSharedPreferences("REGISTRATION", MODE_PRIVATE);
+        boolean isReg = prefs.getBoolean("REG",true);
+
+        Log.i(TAG, "saveData: "+isReg);
+
+
+
+
     }
 
 }

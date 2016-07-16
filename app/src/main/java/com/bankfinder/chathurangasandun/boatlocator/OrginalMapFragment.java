@@ -1,11 +1,15 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.format.Time;
@@ -16,9 +20,13 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bankfinder.chathurangasandun.boatlocator.mypolygon.*;
+
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.Polygon;
+import com.mapbox.mapboxsdk.annotations.PolygonOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -36,6 +44,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+
+
+
 
 
 /**
@@ -46,7 +59,7 @@ import java.util.Calendar;
  * Use the {@link OrginalMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
+public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,com.bankfinder.chathurangasandun.boatlocator.mypolygon.PolygonCodes{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -79,6 +92,21 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
     SharedPreferences.Editor edit;
 
     ArrayList<LatLng> path = new ArrayList<>();
+
+
+    ArrayList<LatLng> polygonArrayList = new ArrayList<>();
+
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon.Builder myouterboaderBuilder;
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon myOuterBoaderPolygonFinal;
+
+    Vibrator vibrator;
+    Ringtone r;
+
+
+
+
+
+
 
     public OrginalMapFragment() {
         // Required empty public constructor
@@ -130,6 +158,11 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
         Log.d(TAG+"value-1", downloadvalue.getInt("VALUE",0)+"");
 
 
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
+        r = RingtoneManager.getRingtone(getActivity(), notification);
+        vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
+
         mapView = (MapView) v.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -160,14 +193,32 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
         mapboxMap = mb;
         mapboxMap.setMyLocationEnabled(true);
         mapboxMap.setOnMyLocationChangeListener(myLocationChangeListener);
-
-
-
+        drawPolygon(mapboxMap);
 
 
 
 
     }
+    private void drawPolygon(MapboxMap mapboxMap) {
+
+        createPolygon();
+
+        mapboxMap.addPolygon(new PolygonOptions()
+                .addAll(polygonArrayList)
+                .fillColor(Color.parseColor("#3bb2d0"))
+                .alpha(0.0f)
+
+
+        );
+    }
+
+
+
+
+
+
+
+
     private MapboxMap.OnMyLocationChangeListener myLocationChangeListener;
 
     {
@@ -230,6 +281,12 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
                 }
 
                 //nearestBranchLocation = getNearestBranch();
+
+
+
+                checkInsideTheBoarder((float)myLocationLat,(float)myLocationLong);
+
+
             }
 
             private void showMyPath() {
@@ -262,6 +319,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
 
 
 
+
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -288,6 +348,25 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
         mListener = null;
 
     }
+
+    @Override
+    public void createPolygon() {
+        //PolygonCodes.outerBoaderLat;
+
+
+
+
+        for(int i = 0;i<PolygonCodes.outerBoaderLat.length;i++){
+            polygonArrayList.add(new LatLng(PolygonCodes.outerBoaderLat[i],PolygonCodes.outerBoaderLong[i]));
+
+        }
+
+        creatMyOuterBoaderPolygon();
+
+
+    }
+
+
 
 
     /**
@@ -436,6 +515,39 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback {
                 Log.e(TAG, "Error: " + error);
             }
         });
+    }
+
+
+
+
+    private void creatMyOuterBoaderPolygon() {
+
+
+
+        myouterboaderBuilder = com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon.Builder();
+
+        for (LatLng l:polygonArrayList
+             ) {
+
+            myouterboaderBuilder.addVertex(new Point((float)l.getLatitude(),(float)l.getLongitude()));
+
+        }
+
+
+        myOuterBoaderPolygonFinal = myouterboaderBuilder.build();
+    }
+
+    private void checkInsideTheBoarder(float latitude, float longitude) {
+        if(myOuterBoaderPolygonFinal.contains(new Point(latitude,longitude))){
+            r.stop();
+            vibrator.cancel();
+            Log.i("Location polygon", "in");
+        }else{
+            r.play();
+            vibrator.vibrate(Integer.MAX_VALUE);
+            Log.i("Location polygon", "out");
+        }
+
     }
 
 
