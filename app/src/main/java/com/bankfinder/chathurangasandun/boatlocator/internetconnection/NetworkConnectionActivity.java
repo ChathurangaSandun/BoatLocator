@@ -25,6 +25,10 @@ import com.bankfinder.chathurangasandun.boatlocator.MainActivity;
 import com.bankfinder.chathurangasandun.boatlocator.OwnerActivity;
 import com.bankfinder.chathurangasandun.boatlocator.R;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.acl.Owner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -206,19 +210,70 @@ public class NetworkConnectionActivity extends AppCompatActivity {
         btProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = getSharedPreferences("REGISTRATION", MODE_PRIVATE);
-                boolean isReg = prefs.getBoolean("REG",false);
+
+                String startMode="0";
+
+
+
 
 
                 if(tvGPs.getText().toString().equals("GPS is Enabled") && !textViewNetwork.getText().toString().equals("Not connected to Internet")){
 
 
-                    if(!isReg){
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                    }else{
-                        startActivity(new Intent(getApplication(), Owner.class));
+                    Log.i(TAG, "gooo......");
+
+                    try {
+
+
+                        startMode = readFileForStartAppMode();
+                        Log.i(TAG, "file  found");
+
+                        if("1".equals(startMode)){
+                            startActivity(new Intent(getApplication(), OwnerActivity.class));
+                        }
+
+                    } catch (FileNotFoundException e) {
+
+                            Log.i(TAG, "file not found");
+
+
+                        alertDialogBuilder.setMessage("You Must Register your App in Ministery");
+                        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+
+                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    /*try {
+                                        createFileForStartingAlppMode();
+                                    } catch (IOException e1) {
+                                        e1.printStackTrace();
+                                    }*/
+
+                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+
+                        alertDialog.show();
+
+
+
+
+
+                    }catch (IOException e){
+                        Log.e(TAG, e.getMessage());
                     }
+
+
+
                 }else{
 
                     alertDialogBuilder.setMessage("Please Enable All Settings");
@@ -242,6 +297,24 @@ public class NetworkConnectionActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private String readFileForStartAppMode() throws FileNotFoundException,IOException {
+        int c = 0;
+        FileInputStream fin = getApplication().openFileInput("start_value");
+        String temp="";
+        while( (c = fin.read()) != -1){
+            temp = temp + Character.toString((char)c);
+        }
+
+        fin.close();
+        return temp;
+    }
+
+    private void createFileForStartingAlppMode() throws IOException {
+        FileOutputStream fOut = getApplication().openFileOutput("start_value",MODE_PRIVATE);
+        fOut.write("0".getBytes());
+        fOut.close();
     }
 
     private void showGPSDisabledAlertToUser(){

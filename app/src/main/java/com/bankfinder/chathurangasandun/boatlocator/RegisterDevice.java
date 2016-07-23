@@ -37,6 +37,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -323,6 +327,11 @@ public class RegisterDevice extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     saveData();
+                                    try {
+                                        chnageStartMode();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     startActivity(new Intent(getApplicationContext(),OwnerActivity.class));
 
@@ -395,6 +404,12 @@ public class RegisterDevice extends AppCompatActivity {
 
         return responseReg;
 
+    }
+
+    private void chnageStartMode() throws IOException {
+        FileOutputStream fOut = getApplication().openFileOutput("start_value",MODE_PRIVATE);
+        fOut.write("1".getBytes());
+        fOut.close();
     }
 
     private String getURL() {
@@ -535,5 +550,6 @@ public class RegisterDevice extends AppCompatActivity {
 
 
     }
+
 
 }
