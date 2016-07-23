@@ -230,7 +230,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
                 IconFactory iconFactory = IconFactory.getInstance(getActivity());
-                Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.dott); //http://www.flaticon.com/free-icon/sailboat_116500
+                Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.dot); //http://www.flaticon.com/free-icon/sailboat_116500
                 Icon icon = iconFactory.fromDrawable(iconDrawable);
 
 
@@ -262,7 +262,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
                             .position(new LatLng(loc))
                             .title(time)
                             .snippet("")
-                            .icon(icon1));
+                            .icon(icon));
                 } else {
                     path.add(loc);
                     mapboxMap.addMarker(new MarkerOptions()
