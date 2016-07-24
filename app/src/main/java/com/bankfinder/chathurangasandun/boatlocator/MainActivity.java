@@ -113,6 +113,12 @@ public class MainActivity extends AppCompatActivity {
 
         v = (Vibrator) this.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
 
+        //set defult fragment
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        OrginalMapFragment orginalMapFragment = new OrginalMapFragment();
+        fragmentTransaction.replace(R.id.container, orginalMapFragment);
+        fragmentTransaction.commit();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -199,13 +205,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
-                        /*if (drawerItem != null) {
+                        if (drawerItem != null) {
                             String selectedItem = ((Nameable) drawerItem).getName().getText(MainActivity.this);
                             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                             if ("Home".equals(selectedItem)) {
                                 Log.d(TAG, "Home");
-                            }if ("Branch Finder".equals(selectedItem)){
-                                Log.d(TAG, "Branch Finder");
+                                OrginalMapFragment orginalMapFragment = new OrginalMapFragment();
+                                fragmentTransaction.replace(R.id.container, orginalMapFragment);
+                            }if ("Weather".equals(selectedItem)){
+                                Log.d(TAG, "Weather");
+                                WeatherMapFragment weatherMapFragment = new WeatherMapFragment();
+                                fragmentTransaction.replace(R.id.container, weatherMapFragment);
 
                             }else if ("ATM Finder".equals(selectedItem)) {
                                 Log.d(TAG, "ATM Finder");
@@ -223,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d(TAG, "Official Web Site");
                             }
                             fragmentTransaction.commit();
-                        }*/
+                        }
                         return false;
                     }
                 })
@@ -245,12 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        viewPager = (ViewPager) findViewById(R.id.veiwPager);
-        setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        setupTabIcons();
 
         //start....
         Log.i("MainActicvtiy", "start.................................");
@@ -319,60 +324,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //for custom tabs+================================================================================
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new OrginalMapFragment(), "ONE");
-        adapter.addFrag(new WeatherMapFragment(), "TWO");
-        viewPager.setAdapter(adapter);
-    }
-
-
-    private void setupTabIcons() {
-
-        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabOne.setText(R.string.boat_tab_title);
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_directions_boat_white_24dp, 0, 0);
-        tabLayout.getTabAt(0).setCustomView(tabOne);
-
-        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabTwo.setText(R.string.weathermap_tab_title);
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_brightness_7_white_24dp, 0, 0);
-        tabLayout.getTabAt(1).setCustomView(tabTwo);
-
-    }
-
-
-
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
 
 
     /*//alarm system

@@ -25,7 +25,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Start"/>
+        android:text="Start"
+        android:id="@+id/btStart"/>
 
     </LinearLayout>
 

@@ -81,17 +81,8 @@ public class DeviceUtil {
 
         String localTime = time.format(currentLocalTime);
 
-
-
-
-
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         String formattedDate = df.format(cal.getTime());
-
-
-
-
-
         Log.i(TAG, formattedDate+" "+localTime);
 
         return new String[]{formattedDate,localTime};

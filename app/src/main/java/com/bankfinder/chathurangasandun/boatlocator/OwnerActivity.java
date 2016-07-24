@@ -1,6 +1,7 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,17 +24,28 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
 import com.bankfinder.chathurangasandun.boatlocator.parse.ParseUtil;
 import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 import com.parse.Parse;
 import com.parse.ParseUser;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class OwnerActivity extends AppCompatActivity  implements   AddFisherManDialog.OnCompleteListener{
@@ -45,12 +57,19 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
     private RecyclerView recyclerView;
 
     TextView tvBoatID,tvOwnerName;
+    String responseInsertJourny ;
+    String fishermanadded = "";
+    RequestQueue requestQueue;
+
+    Button btStart;
+
+    private ProgressDialog pDialog;
 
 
 
     private final  String TAG = "OwnerActivity";
 
-    AlertDialog.Builder alertDialogBuilder;
+    AlertDialog.Builder alertDialogBuilder,alertDialogBuilder2;
 
     ArrayList<String> fishermanList = new ArrayList<>();
 
@@ -61,9 +80,12 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         //alertbox
         alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("Are you sure,You wanted to make decision");
+        alertDialogBuilder2 = new AlertDialog.Builder(this);
 
         alertDialogBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
@@ -78,6 +100,9 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                 finish();
             }
         });
+
+
+        requestQueue = Volley.newRequestQueue(this);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -107,7 +132,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         });
 
         //add fiherman
-        fishermanList.add(0,"siripala");
+        //fishermanList.add(0,"siripala");
 
 
 
@@ -141,7 +166,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                 String devicekey = util.getDevicekey();
 
 
-                insertJourny(fishermanList.get(position));
+                selectFisherman(fishermanList.get(position));
 
 
 
@@ -159,37 +184,60 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
             }
         }));
 
+        btStart = (Button) findViewById(R.id.btStart);
+
+        btStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!fishermanadded.isEmpty()){
+                    insertJourny(fishermanadded);
+                }else{
+                    alertDialogBuilder.setMessage("Please select a fisherman");
+                    alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    alertDialog.show();
+                }
+            }
+        });
+
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(false);
+
 
     }
 
-    private void insertJourny(String name) {
+    private void selectFisherman(final String name) {
 
-        alertDialogBuilder.setMessage("Are your your name is "+ name);
-        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alertDialogBuilder2.setMessage("Are your your name is "+ name);
+        alertDialogBuilder2.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                fishermanadded = name;
+
+                //startActivity(new Intent(getApplication(),MainActivity.class));
 
 
-
-
-
-                startActivity(new Intent(getApplication(),MainActivity.class));
-
-
-                finish();
-            }
-        });
-
-        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
             }
         });
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialogBuilder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-        alertDialog.show();
+            }
+        });
+
+        AlertDialog alertDialog2= alertDialogBuilder2.create();
+
+        alertDialog2.show();
     }
 
     private String getURL() {
@@ -202,93 +250,6 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
         return  build.toString();
     }
-
-/*
-    private void checkOwnerName(final String fisherman) {
-
-
-        showpDialog();
-
-        final String searchownerURL = ServerConstrants.SERVEWR_URL+"connections/journy/InsertJourny.php?fisherman="+fisherman;
-        Log.i(TAG, "checkOwnerName: "+searchownerURL);
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                searchownerURL, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, response.toString());
-                try {
-
-                    String responses = response.getString("ownerid");
-
-                    if(responses.equals("0")){
-                        //TODO :eeror messsage - there is no owner that name
-                        Toast.makeText(getApplicationContext(),"there is no owner that name",Toast.LENGTH_LONG);
-                        ownerid = "";
-                        ownerBoats = null;
-                    }else if(responses.equals("-1")){
-                        //TODO :eeror messsage - there is empty feild
-                        ownerid = "";
-                        ownerBoats=null;
-                    }else{
-                        ownerid = responses;
-                        ownerBoats = response.getJSONArray("boats");
-                        isOwnerSelect = true;
-                        etOwnerName.setEnabled(false);
-                        ((TextView)findViewById(R.id.textView6ss)).setText(etOwnerName.getText());
-                    }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    ownerid = "";
-                    ownerBoats=null;
-                }
-                hidepDialog();
-
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_SHORT).show();
-                // hide the progress dialog
-                ownerid = "";
-                ownerBoats=null;
-                hidepDialog();
-
-            }
-        });
-
-
-        queue.add(jsonObjReq);
-
-
-
-
-    }
-
-    private void showpDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hidepDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }*/
-
-
-
-
-
-
-
-
 
     @Override
     public void onComplete(String name) {
@@ -458,6 +419,124 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
 
 
+
+
+
+    private void insertJourny(final String fisherman) {
+        showpDialog();
+
+        String url = ServerConstrants.SERVEWR_URL+"connections/journy/InsertJourny.php";
+        Log.i(TAG, "insertJourny: "+url);
+
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.i(TAG, response);
+                        responseInsertJourny =response;
+                        Log.i(TAG, "onResponse: "+responseInsertJourny);
+
+                        if(responseInsertJourny.equals("1")){
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+                        }else{
+                            //success
+
+
+                            alertDialogBuilder.setMessage("Some Problem - ");
+                            alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                            alertDialogBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            alertDialog.show();
+
+
+                        }
+
+
+                        hidepDialog();
+
+                    }
+
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: "+error);
+                responseInsertJourny=error.getMessage();
+                hidepDialog();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                DeviceUtil util   = new DeviceUtil(getApplicationContext());
+                String[] dateAndTime = util.getDateAndTime();
+                String startdate = dateAndTime[0] ;
+                String starttime = dateAndTime[1] ;
+                String journyid= tvBoatID.getText().toString()+"_"+startdate+"_"+starttime;
+                journyid = journyid.substring(0,journyid.length()-3);
+
+
+
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("journyid", journyid);
+                params.put("startdate", startdate);
+                params.put("starttime", starttime);
+                params.put("startlat", "");
+                params.put("startlong", "");
+                params.put("enddate", "");
+                params.put("endtime", "");
+                params.put("endlat", "");
+                params.put("endlong", "");
+                params.put("fisherman",fisherman );
+                params.put("boatnumber", tvBoatID.getText().toString());
+
+
+
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+
+
+// Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
+
+
+
+    }
+
+    private void showpDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hidepDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+    }
 
 
 

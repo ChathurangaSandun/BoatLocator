@@ -200,6 +200,7 @@
     <string name="add_today_fisher_man">Add Today Fisher Man</string>
     <string name="title_activity_network_connection">NetworkConnectionActivity</string>
     <string name="title_activity_register_device">RegisterDevice</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>
