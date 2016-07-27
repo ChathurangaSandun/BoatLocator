@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.background)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("Sabdub").withNameShown(true).withEmail("").withIcon(getResources().getDrawable(R.drawable.my_boat))
+                        new ProfileDrawerItem().withName("Sandun").withNameShown(true).withEmail("clivekumara@gmail.com").withIcon(getResources().getDrawable(R.drawable.my_boat))
 
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
@@ -177,11 +177,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withDescription("see Main  marain map").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Weather").withDescription("Full Weather Details of your area").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("My Trips").withDescription("Path history in last 7 days ").withDescriptionTextColorRes(R.color.colorPrimary).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName("Emergency").withDescription("Inform / SOS facility with authoried people").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Others").withDescription("").withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withDescription("see Main  marain map").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Weather").withDescription("Full Weather Details of your area").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("My Trips").withDescription("Path history in last 7 days ").withDescriptionTextColorRes(R.color.accent).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName("Emergency").withDescription("Inform / SOS facility with authoried people").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Others").withDescription("").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
 
 
 
