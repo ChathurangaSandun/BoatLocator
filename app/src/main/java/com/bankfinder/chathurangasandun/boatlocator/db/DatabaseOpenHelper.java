@@ -1,64 +1,87 @@
 package com.bankfinder.chathurangasandun.boatlocator.db;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.bankfinder.chathurangasandun.boatlocator.model.Location;
+
 /**
  * Created by Chathuranga Sandun on 7/27/2016.
  */
-public class DatabaseopenHelper extends SQLiteOpenHelper {
+public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "marks.db";
+        private static final String DATABASE_NAME= "location.db";
 
     // marks table name
-    public static final String TABLE_MARKS = "marks";
+    public static final String TABLE_LOCATION= "location";
 
     // marks Table Columns names
     public static final String KEY_ID = "id";
-    public static final String KEY_NAME = "name";
-    public static final String KEY_MARK= "mark";
+    public static final String KEY_DATE= "date";
+    public static final String KEY_TIME= "time";
+    public static final String KEY_LATITUDE= "lat";
+    public static final String KEY_LONGITUDE= "lng";
+    public static final String KEY_BATRY= "batry";
+
 
     //crating table quary
-    private static final String CREATE_MARKS_TABLE =   "CREATE TABLE " +TABLE_MARKS+" ("+KEY_ID+ " INTEGER PRIMARY KEY, " +KEY_NAME+" TEXT,"+KEY_MARK+" INTEGER)";
+    private static final String CREATE_LOCATION_TABLE =   "CREATE TABLE " +TABLE_LOCATION+" ("
+            +KEY_ID+ " INTEGER PRIMARY KEY, "
+            +KEY_DATE+" TEXT,"
+            +KEY_TIME+" TEXT,"
+            +KEY_LATITUDE+" REAL,"
+            +KEY_LONGITUDE+" REAL,"
+            +KEY_BATRY+" INTEGER)";
 
     //all columns
-    public static final String[] ALL_COLUMNS = {KEY_ID,KEY_NAME,KEY_MARK};
+    public static final String[] ALL_COLUMNS = {KEY_ID,KEY_DATE,KEY_TIME,KEY_LATITUDE,KEY_LONGITUDE,KEY_BATRY};
 
 
 
 
-    public DatabaseopenHelper(Context context) {
+    public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_MARKS);
-        db.execSQL(CREATE_MARKS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_LOCATION);
+        db.execSQL(CREATE_LOCATION_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MARKS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION);
         onCreate(db);
     }
 
-    public void addMark(Marks marks) {
+    public void addLocation(Location location) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DatabaseopenHelper.KEY_NAME,marks.getName() );
-        values.put(DatabaseopenHelper.KEY_MARK, marks.getMark());
+        values.put(DatabaseOpenHelper.KEY_ID,location.getLocationID() );
+        values.put(DatabaseOpenHelper.KEY_DATE, location.getDate());
+        values.put(DatabaseOpenHelper.KEY_TIME, location.getTime());
+        values.put(DatabaseOpenHelper.KEY_LATITUDE, location.getLat());
+        values.put(DatabaseOpenHelper.KEY_LONGITUDE, location.getLng());
+        values.put(DatabaseOpenHelper.KEY_BATRY, location.getBatryStatus());
+
 
         // Inserting Row
-        db.insert(DatabaseopenHelper.TABLE_MARKS, null, values);
+        db.insert(DatabaseOpenHelper.TABLE_LOCATION, null, values);
         db.close(); // Closing database connection
     }
 
-    // Getting single contact
+   /* // Getting single contact
     public Marks getMarks(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -126,6 +149,6 @@ public class DatabaseopenHelper extends SQLiteOpenHelper {
 
         // return count
         return cursor.getCount();
-    }
+    }*/
 
 }
