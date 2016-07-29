@@ -306,6 +306,8 @@ public class LocationService extends Service {
 
                     Log.i("ServiceLocation",dateAndTime[0]+" "+dateAndTime[1]+" "+latitude+" "+longitude+" "+level);
 
+                    Log.i("send location parse", "yes");
+
 
 
 
@@ -320,6 +322,7 @@ public class LocationService extends Service {
 
 
                     //save internal databse
+                    Log.i("internal", "start");
                     insertInternalDatabase(date,time,latitude,longitude,level);
                 }
 
@@ -380,8 +383,9 @@ public class LocationService extends Service {
 
         }
 
-
-        //db.addLocation(new com.bankfinder.chathurangasandun.boatlocator.model.Location(locationIntID,date,time,latitude,longitude,level));
+        Log.i("internal", "add");
+        db.addLocation(new com.bankfinder.chathurangasandun.boatlocator.model.Location(locationIntID,date,time,latitude,longitude,level));
+        Log.i("internal", "added");
         locationIntID++;
     }
 

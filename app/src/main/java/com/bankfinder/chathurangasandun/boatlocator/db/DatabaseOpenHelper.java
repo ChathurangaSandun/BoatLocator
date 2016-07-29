@@ -77,7 +77,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 
         // Inserting Row
-        db.insert(DatabaseOpenHelper.TABLE_LOCATION, null, values);
+        long insert = db.insert(DatabaseOpenHelper.TABLE_LOCATION, null, values);
+
         db.close(); // Closing database connection
     }
 
