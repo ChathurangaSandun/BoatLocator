@@ -1,6 +1,7 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -95,13 +96,22 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
     ArrayList<LatLng> polygonArrayList = new ArrayList<>();
+    ArrayList<LatLng> polygonArrayList2 = new ArrayList<>();
 
     com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon.Builder myouterboaderBuilder;
     com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon myOuterBoaderPolygonFinal;
 
+
+
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon.Builder srilankaboaderBuilder;
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon srilankaBoaderPolygonFinal;
+
     Vibrator vibrator;
     Ringtone r;
 
+
+    boolean isServiceOn =false;
+    Intent serviceIntent ;
 
 
 
@@ -179,6 +189,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
         }
 
+
+
+        serviceIntent = new Intent(getContext(),LocationService.class);
 
 
 
@@ -286,6 +299,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
                 checkInsideTheBoarder((float)myLocationLat,(float)myLocationLong);
 
+                checkInsideSrilanka((float)myLocationLat,(float)myLocationLong);
+
 
             }
 
@@ -324,6 +339,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
     }
 
+
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -361,7 +378,15 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
         }
 
+
+        for(int i = 0;i<PolygonCodes.srilankaBoaderLat.length;i++){
+            polygonArrayList2.add(new LatLng(PolygonCodes.srilankaBoaderLat[i],PolygonCodes.srilankaBoaderLong[i]));
+
+        }
+
+
         creatMyOuterBoaderPolygon();
+        creatSriLankaBoaderPolygon();
 
 
     }
@@ -537,6 +562,30 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         myOuterBoaderPolygonFinal = myouterboaderBuilder.build();
     }
 
+    private void creatSriLankaBoaderPolygon() {
+
+
+
+        srilankaboaderBuilder = com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon.Builder();
+
+
+        Log.i(TAG, "polygn number "+polygonArrayList2.size());
+
+        for (LatLng l:polygonArrayList2
+                ) {
+
+            srilankaboaderBuilder.addVertex(new Point((float)l.getLatitude(),(float)l.getLongitude()));
+
+        }
+
+
+        srilankaBoaderPolygonFinal = srilankaboaderBuilder.build();
+    }
+
+
+
+
+
     private void checkInsideTheBoarder(float latitude, float longitude) {
         if(myOuterBoaderPolygonFinal.contains(new Point(latitude,longitude))){
             r.stop();
@@ -546,6 +595,47 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
             r.play();
             vibrator.vibrate(Integer.MAX_VALUE);
             Log.i("Location polygon", "out");
+        }
+
+    }
+
+    static boolean previousLocationInSrilanka = true;
+
+    private void checkInsideSrilanka(float latitude, float longitude) {
+        if(srilankaBoaderPolygonFinal.contains(new Point(latitude,longitude))){
+            if(previousLocationInSrilanka){
+                //no change
+
+            }else{
+                //stop the service
+                getContext().stopService(serviceIntent);
+
+                Log.i(TAG, "checkInsideSrilanka: stop service");
+                Log.i("SERVICE", "Stop.................................");
+
+            }
+
+            previousLocationInSrilanka = true;
+
+            Log.i(TAG, "checkInsideSrilanka: inthe srilanka");
+        }else{
+            if(previousLocationInSrilanka){
+                //start the service
+
+                getContext().stopService(serviceIntent);
+                getContext().startService(serviceIntent);
+                Log.i(TAG, "checkInsideSrilanka: start service");
+                Log.i("SERVICE", "start.................................");
+            }else{
+                // no change
+            }
+
+            previousLocationInSrilanka = false;
+
+            Log.i(TAG, "checkInsideSrilanka:  out the srilanka");
+
+
+
         }
 
     }

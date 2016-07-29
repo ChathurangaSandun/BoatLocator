@@ -259,8 +259,8 @@ public class MainActivity extends AppCompatActivity {
 
         //start....
         Log.i("MainActicvtiy", "start.................................");
-        i = new Intent(this,LocationService.class);
-        startService(i);
+        //i = new Intent(this,LocationService.class);
+        //startService(i);
     }
 
 

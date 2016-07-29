@@ -34,11 +34,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     //crating table quary
     private static final String CREATE_LOCATION_TABLE =   "CREATE TABLE " +TABLE_LOCATION+" ("
-            +KEY_ID+ " INTEGER PRIMARY KEY, "
+            +KEY_ID+ " INTEGER PRIMARY KEY , "
             +KEY_DATE+" TEXT,"
             +KEY_TIME+" TEXT,"
-            +KEY_LATITUDE+" REAL,"
-            +KEY_LONGITUDE+" REAL,"
+            +KEY_LATITUDE+" REAL ,"
+            +KEY_LONGITUDE+" REAL ,"
             +KEY_BATRY+" INTEGER)";
 
     //all columns
@@ -79,6 +79,13 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         // Inserting Row
         db.insert(DatabaseOpenHelper.TABLE_LOCATION, null, values);
         db.close(); // Closing database connection
+    }
+
+
+    public void dropTable(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DROP TABLE  " + TABLE_LOCATION);
+
     }
 
    /* // Getting single contact
@@ -150,5 +157,28 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         // return count
         return cursor.getCount();
     }*/
+
+
+    public void deleteAllRaws(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_LOCATION;
+
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                db.delete(TABLE_LOCATION, KEY_ID + " = ?",new String[]{String.valueOf(id)});
+
+            } while (cursor.moveToNext());
+        }
+
+
+
+        db.close();
+    }
 
 }

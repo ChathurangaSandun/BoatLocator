@@ -65,6 +65,8 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
     private ProgressDialog pDialog;
 
+    static  String journyID;
+
 
 
     private final  String TAG = "OwnerActivity";
@@ -489,6 +491,8 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                 String starttime = dateAndTime[1] ;
                 String journyid= tvBoatID.getText().toString()+"_"+startdate+"_"+starttime;
                 journyid = journyid.substring(0,journyid.length()-3);
+
+                journyID = journyid;
 
 
 

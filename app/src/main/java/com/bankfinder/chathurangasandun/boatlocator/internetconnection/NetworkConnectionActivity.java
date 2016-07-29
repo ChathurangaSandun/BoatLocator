@@ -222,6 +222,7 @@ public class NetworkConnectionActivity extends AppCompatActivity {
 
                     Log.i(TAG, "gooo......");
 
+
                     try {
 
 

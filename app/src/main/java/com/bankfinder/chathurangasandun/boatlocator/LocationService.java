@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,15 +20,28 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bankfinder.chathurangasandun.boatlocator.db.DatabaseOpenHelper;
 import com.bankfinder.chathurangasandun.boatlocator.mypolygon.Point;
 import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
 import com.bankfinder.chathurangasandun.boatlocator.parse.ParseConstrains;
 import com.bankfinder.chathurangasandun.boatlocator.parse.SimpleInit;
+import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 import com.parse.Parse;
 import com.parse.ParseObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import bolts.Task;
 
@@ -44,8 +58,12 @@ public class LocationService extends Service {
      Ringtone r;
     Vibrator vibrator;
 
-    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon  outerBoader;
+    static boolean isInit = false;
 
+
+
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon  outerBoader;
+    DatabaseOpenHelper db =new DatabaseOpenHelper(this);
 
     double locationCorection[] = new double[4] ;
     int locationcount = 0;
@@ -53,12 +71,27 @@ public class LocationService extends Service {
     Intent intent;
     int counter = 0;
 
+    static int locationIntID = 0;
+
+    String responseValue="0";
+
+    RequestQueue requestQueue;
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         intent = new Intent(BROADCAST_ACTION);
         Log.i("Location", "start______________________ ");
-        Parse.initialize(getApplicationContext(), ParseConstrains.APPLICATION_KEY, ParseConstrains.CLIENT_KEY);
+
+        if(!isInit){
+            Parse.initialize(getApplicationContext(), ParseConstrains.APPLICATION_KEY, ParseConstrains.CLIENT_KEY);
+            isInit = true;
+        }
+
+
+
         this.registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
@@ -67,6 +100,8 @@ public class LocationService extends Service {
 
         vibrator = (Vibrator) this.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
 
+
+        requestQueue = Volley.newRequestQueue(this);
         //drawBoader();
     }
 
@@ -256,6 +291,9 @@ public class LocationService extends Service {
                     SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
                     String boatID = prefs.getString("BoatId","COLO001-101");
 
+                    String date = dateAndTime[0];
+                    String time = dateAndTime[1];
+
 
                     ParseObject locationobject = new ParseObject("location");
                     locationobject.put("boatid",boatID);
@@ -271,8 +309,18 @@ public class LocationService extends Service {
 
 
 
+
+
+
+                    //save parse server
+
                     locationobject.saveEventually();
                     counter=0;
+
+
+
+                    //save internal databse
+                    insertInternalDatabase(date,time,latitude,longitude,level);
                 }
 
 
@@ -321,6 +369,94 @@ public class LocationService extends Service {
 
     }
 
+    private void insertInternalDatabase(String date, String time, double latitude, double longitude, int level){
+
+        Log.i("Service", "insertInternalDatabase: "+locationIntID);
+
+        if(locationIntID == 0){
+            //db.deleteAllRaws();
+
+            //updateStartLocationJourny(latitude,longitude);
+
+        }
+
+
+        //db.addLocation(new com.bankfinder.chathurangasandun.boatlocator.model.Location(locationIntID,date,time,latitude,longitude,level));
+        locationIntID++;
+    }
+
+    private void updateStartLocationJourny(final double lat, final double lng) {
+
+
+
+        String url = ServerConstrants.SERVEWR_URL+"connections/journy/UpdateStartPoint.php";
+        Log.i("startpoint", "insertJourny: "+url);
+
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.i("startpoint", response);
+                        responseValue =response;
+
+
+                        if(responseValue.equals("1")){
+                            Log.i("startlocation", "startlocation successfull");
+
+
+                        }else{
+                            //updateStartLocationJourny(lat, lng);
+
+                            Log.i("startlocation", "startlocation error");
+                        }
+
+
+
+
+                    }
+
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("responseValue", "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+
+                String journyid = OwnerActivity.journyID;
+
+
+
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("journyid", journyid);
+                params.put("startlat", String.valueOf(lat));
+                params.put("startlong", String.valueOf(lng));
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+
+
+// Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
+
+
+
+    }
 
 
 
