@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.bankfinder.chathurangasandun.boatlocator.model.Location;
 
@@ -34,12 +35,15 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     //crating table quary
     private static final String CREATE_LOCATION_TABLE =   "CREATE TABLE " +TABLE_LOCATION+" ("
-            +KEY_ID+ " INTEGER PRIMARY KEY , "
+            +KEY_ID+ " INTEGER , "
             +KEY_DATE+" TEXT,"
             +KEY_TIME+" TEXT,"
             +KEY_LATITUDE+" REAL ,"
             +KEY_LONGITUDE+" REAL ,"
-            +KEY_BATRY+" INTEGER)";
+            +KEY_BATRY+" INTEGER, PRIMARY KEY ("+ KEY_ID+"))";
+
+
+
 
     //all columns
     public static final String[] ALL_COLUMNS = {KEY_ID,KEY_DATE,KEY_TIME,KEY_LATITUDE,KEY_LONGITUDE,KEY_BATRY};
@@ -49,12 +53,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
     public DatabaseOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        Log.i("table",CREATE_LOCATION_TABLE );
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS "+ TABLE_LOCATION);
         db.execSQL(CREATE_LOCATION_TABLE);
+
 
     }
 
@@ -180,6 +186,15 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 
         db.close();
+    }
+
+
+
+    public  void createdatabase(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_LOCATION);
+        db.execSQL(CREATE_LOCATION_TABLE);
+
     }
 
 }

@@ -63,7 +63,7 @@ public class LocationService extends Service {
 
 
     com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon  outerBoader;
-    DatabaseOpenHelper db =new DatabaseOpenHelper(this);
+    DatabaseOpenHelper db ;
 
     double locationCorection[] = new double[4] ;
     int locationcount = 0;
@@ -84,6 +84,8 @@ public class LocationService extends Service {
         super.onCreate();
         intent = new Intent(BROADCAST_ACTION);
         Log.i("Location", "start______________________ ");
+
+        db=new DatabaseOpenHelper(getApplicationContext());
 
         if(!isInit){
             Parse.initialize(getApplicationContext(), ParseConstrains.APPLICATION_KEY, ParseConstrains.CLIENT_KEY);
@@ -389,78 +391,7 @@ public class LocationService extends Service {
         locationIntID++;
     }
 
-    private void updateStartLocationJourny(final double lat, final double lng) {
 
-
-
-        String url = ServerConstrants.SERVEWR_URL+"connections/journy/UpdateStartPoint.php";
-        Log.i("startpoint", "insertJourny: "+url);
-
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        Log.i("startpoint", response);
-                        responseValue =response;
-
-
-                        if(responseValue.equals("1")){
-                            Log.i("startlocation", "startlocation successfull");
-
-
-                        }else{
-                            //updateStartLocationJourny(lat, lng);
-
-                            Log.i("startlocation", "startlocation error");
-                        }
-
-
-
-
-                    }
-
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("responseValue", "onErrorResponse: "+error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-
-                String journyid = OwnerActivity.journyID;
-
-
-
-
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("journyid", journyid);
-                params.put("startlat", String.valueOf(lat));
-                params.put("startlong", String.valueOf(lng));
-                return params;
-            }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-
-
-
-
-// Add the request to the RequestQueue.
-        requestQueue.add(stringRequest);
-
-
-
-    }
 
 
 

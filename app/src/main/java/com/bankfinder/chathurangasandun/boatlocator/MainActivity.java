@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bankfinder.chathurangasandun.boatlocator.db.DatabaseOpenHelper;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -118,6 +119,14 @@ public class MainActivity extends AppCompatActivity {
         OrginalMapFragment orginalMapFragment = new OrginalMapFragment();
         fragmentTransaction.replace(R.id.container, orginalMapFragment);
         fragmentTransaction.commit();
+
+
+        Log.i(TAG, "onCreate: create");
+        //database
+        DatabaseOpenHelper databaseOpenHelper = new DatabaseOpenHelper(this);
+        databaseOpenHelper.createdatabase();
+
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

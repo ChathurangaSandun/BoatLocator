@@ -21,8 +21,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bankfinder.chathurangasandun.boatlocator.mypolygon.*;
 
+import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -45,11 +53,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
-
-
-
-
+import java.util.Map;
 
 
 /**
@@ -71,6 +77,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    RequestQueue requestQueue;
 
 
     private View v;
@@ -112,6 +120,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
     boolean isServiceOn =false;
     Intent serviceIntent ;
+
+    String responseValue;
 
 
 
@@ -192,6 +202,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
         serviceIntent = new Intent(getContext(),LocationService.class);
+        requestQueue = Volley.newRequestQueue(getActivity());
 
 
 
@@ -290,10 +301,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
                 if (mapboxMap != null) {
-                    //mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12.0f));
+                    mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 8.0f));
                 }
-
-                //nearestBranchLocation = getNearestBranch();
 
 
 
@@ -602,6 +611,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
     static boolean previousLocationInSrilanka = true;
 
     private void checkInsideSrilanka(float latitude, float longitude) {
+
+        String url = "";
         if(srilankaBoaderPolygonFinal.contains(new Point(latitude,longitude))){
             if(previousLocationInSrilanka){
                 //no change
@@ -613,6 +624,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
                 Log.i(TAG, "checkInsideSrilanka: stop service");
                 Log.i("SERVICE", "Stop.................................");
 
+  //              url = ServerConstrants.SERVEWR_URL+"connections/journy/UpdateEndPoint.php";
+    //            updateStartLocationJourny(latitude,longitude,url);
+
             }
 
             previousLocationInSrilanka = true;
@@ -621,11 +635,14 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         }else{
             if(previousLocationInSrilanka){
                 //start the service
+                url = ServerConstrants.SERVEWR_URL+"connections/journy/UpdateStartPoint.php";
 
                 getContext().stopService(serviceIntent);
                 getContext().startService(serviceIntent);
                 Log.i(TAG, "checkInsideSrilanka: start service");
                 Log.i("SERVICE", "start.................................");
+
+                updateStartLocationJourny(latitude,longitude,url);
             }else{
                 // no change
             }
@@ -637,6 +654,79 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
         }
+
+    }
+
+    private void updateStartLocationJourny(final double lat, final double lng ,String url) {
+
+
+
+
+        Log.i("startpoint", "insertJourny: "+url);
+
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.i("startpoint", response);
+                        responseValue =response;
+
+
+                        if(responseValue.equals("1")){
+                            Log.i("startlocation", "startlocation successfull");
+
+
+                        }else{
+                            //updateStartLocationJourny(lat, lng);
+
+                            Log.i("startlocation", "startlocation error");
+                        }
+
+
+
+
+                    }
+
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("responseValue", "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+
+                String journyid = OwnerActivity.journyID;
+
+
+                Log.i(TAG, "getParams: "+lat +" "+lng);
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("journyid", journyid);
+                params.put("startlat", String.valueOf(lat));
+                params.put("startlong", String.valueOf(lng));
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+
+
+// Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
+
+
 
     }
 
