@@ -33,13 +33,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bankfinder.chathurangasandun.boatlocator.db.DatabaseOpenHelper;
 import com.bankfinder.chathurangasandun.boatlocator.mypolygon.Point;
+import com.bankfinder.chathurangasandun.boatlocator.mypolygon.PolygonCodes;
 import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
 import com.bankfinder.chathurangasandun.boatlocator.parse.ParseConstrains;
 import com.bankfinder.chathurangasandun.boatlocator.parse.SimpleInit;
 import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,10 +53,10 @@ import bolts.Task;
  */
 public class LocationService extends Service {
     public static final String BROADCAST_ACTION = "Hello World";
-    private static final int TEN_MINUTES = 1000 * 10;
+    private static final int TEN_MINUTES = 1000 * 10; //1000 *60*10
     public LocationManager locationManager;
     public MyLocationListener listener;
-    public Location previousBestLocation = null;
+    public Location previousBestLocation ;
     private int level;
      Ringtone r;
     Vibrator vibrator;
@@ -76,6 +79,20 @@ public class LocationService extends Service {
     String responseValue="0";
 
     RequestQueue requestQueue;
+
+    static String journyid;
+
+    ArrayList<LatLng> polygonArrayList = new ArrayList<>();
+
+    float lat,lng;
+
+    String objectId;
+
+
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon.Builder myouterboaderBuilder;
+    com.bankfinder.chathurangasandun.boatlocator.mypolygon.Polygon myOuterBoaderPolygonFinal;
+
+
 
 
 
@@ -104,6 +121,7 @@ public class LocationService extends Service {
 
 
         requestQueue = Volley.newRequestQueue(this);
+
         //drawBoader();
     }
 
@@ -134,8 +152,8 @@ public class LocationService extends Service {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TEN_MINUTES , 100, listener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_MINUTES, 100, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TEN_MINUTES , 100, listener); //1000
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TEN_MINUTES, 100, listener); //1000
     }
 
     @Override
@@ -168,7 +186,7 @@ public class LocationService extends Service {
         int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
         boolean isLessAccurate = accuracyDelta > 0;
         boolean isMoreAccurate = accuracyDelta < 0;
-        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200; //10000
 
         // Check if the old and new location are from the same provider
         boolean isFromSameProvider = isSameProvider(location.getProvider(),
@@ -210,7 +228,33 @@ public class LocationService extends Service {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        String[] dateAndTime = new DeviceUtil(getApplicationContext()).getDateAndTime();
+
+
+        SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
+        String boatID = prefs.getString("BoatId","COLO001-101");
+
+        String date = dateAndTime[0];
+        String time = dateAndTime[1];
+
+
+
+        ParseObject locationobject = new ParseObject("location");
+        locationobject.put("boat_id",boatID);
+        locationobject.put("journy_id",journyid);
+        locationobject.put("time",dateAndTime[1]);
+        locationobject.put("date",dateAndTime[0]);
+        locationobject.put("latitude",lat);
+        locationobject.put("longitude",lng);
+        locationobject.put("battery_state",level);
+        locationobject.put("endornot","yes");
+        locationobject.put("error","no");
+
+        locationobject.saveEventually();
+
         locationManager.removeUpdates(listener);
+
+
     }
 
     public static Thread performOnBackgroundThread(final Runnable runnable) {
@@ -269,6 +313,7 @@ public class LocationService extends Service {
 
         public void onLocationChanged(final Location loc)
         {
+
             Log.i("Locationn", "Location changed");
             if(isBetterLocation(loc, previousBestLocation)) {
                 double latitude = loc.getLatitude();
@@ -281,58 +326,73 @@ public class LocationService extends Service {
                 //check inside the boader
                 //checkInsideTheBoarder((float)latitude,(float) longitude);
 
+                String error = OrginalMapFragment.error;
+
+                lat = (float)latitude;
+                lng = (float)longitude;
+
+                String[] dateAndTime = new DeviceUtil(getApplicationContext()).getDateAndTime();
+
+
+                SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
+                String boatID = prefs.getString("BoatId","COLO001-101");
+
+                String date = dateAndTime[0];
+                String time = dateAndTime[1];
+
+
+                boolean b = idFirstLocation();
+
+                if(b){
+                    journyid = boatID+"_"+date+"_"+time;
+                    journyid = journyid.substring(0,journyid.length()-3);
+                }
 
 
                 if(counter == 0){
+
+
+
                     counter ++;
                 }else if(counter == 1){
 
-                    String[] dateAndTime = new DeviceUtil(getApplicationContext()).getDateAndTime();
 
 
-                    SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
-                    String boatID = prefs.getString("BoatId","COLO001-101");
-
-                    String date = dateAndTime[0];
-                    String time = dateAndTime[1];
 
 
                     ParseObject locationobject = new ParseObject("location");
-                    locationobject.put("boatid",boatID);
+                    locationobject.put("boat_id",boatID);
+                    locationobject.put("journy_id",journyid);
                     locationobject.put("time",dateAndTime[1]);
                     locationobject.put("date",dateAndTime[0]);
-                    locationobject.put("lat",latitude);
-                    locationobject.put("long",longitude);
-                    locationobject.put("batry",level);
-                    locationobject.put("passbool",false);
+                    locationobject.put("latitude",latitude);
+                    locationobject.put("longitude",longitude);
+                    locationobject.put("battery_state",level);
+                    locationobject.put("endornot","no");
+                    locationobject.put("error",error);
 
-                    Log.i("ServiceLocation",dateAndTime[0]+" "+dateAndTime[1]+" "+latitude+" "+longitude+" "+level);
+                    Log.i("ServiceLocation",boatID+" "+journyid+" "+dateAndTime[0]+" "+dateAndTime[1]+" "+latitude+" "+longitude+" "+level+""+"no"+"no");
 
                     Log.i("send location parse", "yes");
 
 
 
-
-
+                    objectId = locationobject.getObjectId();
 
 
                     //save parse server
 
-                    locationobject.saveEventually();
+                    Task<Void> voidTask = locationobject.saveEventually();
+
+                    Log.i("locationServer", "onLocationChanged:" +voidTask.isCompleted());
                     counter=0;
 
 
 
                     //save internal databse
                     Log.i("internal", "start");
-                    insertInternalDatabase(date,time,latitude,longitude,level);
+                    //insertInternalDatabase(date,time,latitude,longitude,level);
                 }
-
-
-
-
-
-
 
 
 
@@ -361,20 +421,9 @@ public class LocationService extends Service {
 
     }
 
-    private void checkInsideTheBoarder(float latitude, float longitude) {
-        if(outerBoader.contains(new Point(latitude,longitude))){
-            r.stop();
-            vibrator.cancel();
-            Log.i("Location polygon", "in");
-        }else{
-            r.play();
-            vibrator.vibrate(Integer.MAX_VALUE);
-            Log.i("Location polygon", "out");
-        }
 
-    }
 
-    private void insertInternalDatabase(String date, String time, double latitude, double longitude, int level){
+   /* private void insertInternalDatabase(String date, String time, double latitude, double longitude, int level){
 
         Log.i("Service", "insertInternalDatabase: "+locationIntID);
 
@@ -389,7 +438,27 @@ public class LocationService extends Service {
         db.addLocation(new com.bankfinder.chathurangasandun.boatlocator.model.Location(locationIntID,date,time,latitude,longitude,level));
         Log.i("internal", "added");
         locationIntID++;
+    } */
+
+    public boolean idFirstLocation(){
+        if(locationIntID == 0){
+            locationIntID++;
+            return true;
+
+
+        }else{
+            locationIntID++;
+            return  false;
+        }
+
+
+
     }
+
+
+
+
+
 
 
 

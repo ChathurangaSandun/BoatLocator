@@ -76,6 +76,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
     private String mParam1;
     private String mParam2;
 
+
+
     private OnFragmentInteractionListener mListener;
 
     RequestQueue requestQueue;
@@ -122,6 +124,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
     Intent serviceIntent ;
 
     String responseValue;
+
+
+    static String error = "no";
 
 
 
@@ -304,7 +309,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
                     mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 8.0f));
                 }
 
-
+/////////////////////////
 
                 checkInsideTheBoarder((float)myLocationLat,(float)myLocationLong);
 
@@ -374,7 +379,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         mListener = null;
 
     }
-
+//////////////////////////////////////////////////////////////////////////
     @Override
     public void createPolygon() {
         //PolygonCodes.outerBoaderLat;
@@ -392,12 +397,12 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
             polygonArrayList2.add(new LatLng(PolygonCodes.srilankaBoaderLat[i],PolygonCodes.srilankaBoaderLong[i]));
 
         }
-
+////////////////
 
         creatMyOuterBoaderPolygon();
         creatSriLankaBoaderPolygon();
 
-
+/////////////////////////
     }
 
 
@@ -551,7 +556,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         });
     }
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     private void creatMyOuterBoaderPolygon() {
@@ -597,10 +602,14 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
     private void checkInsideTheBoarder(float latitude, float longitude) {
         if(myOuterBoaderPolygonFinal.contains(new Point(latitude,longitude))){
+            error = "no";
+
             r.stop();
             vibrator.cancel();
             Log.i("Location polygon", "in");
         }else{
+            error = "yes";
+
             r.play();
             vibrator.vibrate(Integer.MAX_VALUE);
             Log.i("Location polygon", "out");
@@ -619,10 +628,17 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
             }else{
                 //stop the service
+
+
+
+
                 getContext().stopService(serviceIntent);
 
                 Log.i(TAG, "checkInsideSrilanka: stop service");
                 Log.i("SERVICE", "Stop.................................");
+
+
+
 
   //              url = ServerConstrants.SERVEWR_URL+"connections/journy/UpdateEndPoint.php";
     //            updateStartLocationJourny(latitude,longitude,url);
@@ -635,14 +651,15 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         }else{
             if(previousLocationInSrilanka){
                 //start the service
-                url = ServerConstrants.SERVEWR_URL+"connections/journy/UpdateStartPoint.php";
-
+                //url = ServerConstrants.SERVEWR_URL+"connections/journy/UpdateStartPoint.php";
+                LocationService.locationIntID =0;
                 getContext().stopService(serviceIntent);
                 getContext().startService(serviceIntent);
                 Log.i(TAG, "checkInsideSrilanka: start service");
                 Log.i("SERVICE", "start.................................");
 
-                updateStartLocationJourny(latitude,longitude,url);
+
+                //updateStartLocationJourny(latitude,longitude,url);
             }else{
                 // no change
             }

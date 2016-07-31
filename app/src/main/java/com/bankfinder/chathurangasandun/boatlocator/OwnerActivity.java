@@ -192,7 +192,10 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
             @Override
             public void onClick(View v) {
                 if(!fishermanadded.isEmpty()){
-                    insertJourny(fishermanadded);
+                    //insertJourny(fishermanadded);
+
+                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
                 }else{
                     alertDialogBuilder.setMessage("Please select a fisherman");
                     alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -422,7 +425,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
 
 
-
+/*
 
     private void insertJourny(final String fisherman) {
         showpDialog();
@@ -511,7 +514,6 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                 params.put("boatnumber", tvBoatID.getText().toString());
 
 
-
                 return params;
             }
             @Override
@@ -545,7 +547,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
 
 
-
+*/
 
 
 }
