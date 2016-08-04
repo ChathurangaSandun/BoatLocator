@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login2);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

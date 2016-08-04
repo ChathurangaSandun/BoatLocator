@@ -8,7 +8,7 @@ public class EndPoints {
     // localhost url
     // public static final String BASE_URL = "http://192.168.0.101/gcm_chat/v1";
 
-    public static final String BASE_URL = "http://192.168.149.2/gcm_chat/v1";
+    public static final String BASE_URL = "http://192.168.99.2/gcm_chat/v1";
     public static final String LOGIN = BASE_URL + "/user/login";
     public static final String USER = BASE_URL + "/user/_ID_";
     public static final String CHAT_ROOMS = BASE_URL + "/chat_rooms";

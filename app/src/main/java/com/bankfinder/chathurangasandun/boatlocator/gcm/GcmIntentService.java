@@ -32,6 +32,10 @@ import com.bankfinder.chathurangasandun.boatlocator.model.User;
 
 public class GcmIntentService extends IntentService {
 
+
+
+    private static final String projectId= "364080824096";
+
     private static final String TAG = GcmIntentService.class.getSimpleName();
 
     public GcmIntentService() {
@@ -70,7 +74,7 @@ public class GcmIntentService extends IntentService {
 
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+            String token = instanceID.getToken(projectId,
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
             Log.e(TAG, "GCM Registration Token: " + token);
@@ -159,7 +163,7 @@ public class GcmIntentService extends IntentService {
         InstanceID instanceID = InstanceID.getInstance(MyApplication.getInstance().getApplicationContext());
         String token = null;
         try {
-            token = instanceID.getToken(MyApplication.getInstance().getApplicationContext().getString(R.string.gcm_defaultSenderId),
+            token = instanceID.getToken(projectId,
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             if (token != null) {
                 pubSub.subscribe(token, "/topics/" + topic, null);
@@ -178,7 +182,8 @@ public class GcmIntentService extends IntentService {
         InstanceID instanceID = InstanceID.getInstance(getApplicationContext());
         String token = null;
         try {
-            token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+            token = instanceID.getToken(projectId, //1022850594862  1022850594862
+
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             if (token != null) {
                 pubSub.unsubscribe(token, "");
