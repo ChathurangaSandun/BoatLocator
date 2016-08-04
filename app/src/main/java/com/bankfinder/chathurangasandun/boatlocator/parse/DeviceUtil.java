@@ -79,6 +79,7 @@ public class DeviceUtil {
 // you can get seconds by adding  "...:ss" to it
         time.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
 
+
         String localTime = time.format(currentLocalTime);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
