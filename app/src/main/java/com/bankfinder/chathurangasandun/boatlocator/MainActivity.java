@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -190,7 +191,8 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Weather").withDescription("Full Weather Details of your area").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
         PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("My Trips").withDescription("Path history in last 7 days ").withDescriptionTextColorRes(R.color.accent).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
         PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName("Emergency").withDescription("Inform / SOS facility with authoried people").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Others").withDescription("").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Chat").withDescription("Chat With Others").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item6 = new PrimaryDrawerItem().withName("Others").withDescription("").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
 
 
 
@@ -207,7 +209,8 @@ public class MainActivity extends AppCompatActivity {
                         item2,
                         item3,
                         item4,
-                        item5
+                        item5,
+                        item6
                 )
 
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -226,10 +229,12 @@ public class MainActivity extends AppCompatActivity {
                                 WeatherMapFragment weatherMapFragment = new WeatherMapFragment();
                                 fragmentTransaction.replace(R.id.container, weatherMapFragment);
 
-                            }else if ("ATM Finder".equals(selectedItem)) {
+                            }else if ("My Trips".equals(selectedItem)) {
                                 Log.d(TAG, "ATM Finder");
-                            } else if ("Nearest ATM and Branch".equals(selectedItem)) {
+                            } else if ("Emergency".equals(selectedItem)) {
                                 Log.d(TAG, "Nearest ATM and Branch");
+                            } else if ("Chat".equals(selectedItem)) {
+                                openApp(getApplication(),"info.androidhive.gcm");
 
                             }else if("Check Update".equals(selectedItem)){
                                 Log.d(TAG, "Check Update");
@@ -350,7 +355,17 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
     }*/
 
-
+    public static boolean openApp(Context context, String packageName) {
+        PackageManager manager = context.getPackageManager();
+        Intent i = manager.getLaunchIntentForPackage(packageName);
+        if (i == null) {
+            return false;
+            //throw new PackageManager.NameNotFoundException();
+        }
+        i.addCategory(Intent.CATEGORY_LAUNCHER);
+        context.startActivity(i);
+        return true;
+    }
 
 
 
