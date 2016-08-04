@@ -201,6 +201,7 @@
     <string name="title_activity_network_connection">NetworkConnectionActivity</string>
     <string name="title_activity_register_device">RegisterDevice</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_weatheractivity">Weatheractivity</string>
 
 
 </resources>

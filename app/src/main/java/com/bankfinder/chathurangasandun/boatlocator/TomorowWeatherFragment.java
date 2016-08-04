@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NowWeatherFragment extends Fragment {
+public class TomorowWeatherFragment extends Fragment {
 
 
-    public NowWeatherFragment() {
+    public TomorowWeatherFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +23,7 @@ public class NowWeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_now_weather, container, false);
+        return inflater.inflate(R.layout.fragment_tomorow_weather, container, false);
     }
 
 }
