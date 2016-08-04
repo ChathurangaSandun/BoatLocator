@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import info.androidhive.gcm.model.User;
+import com.bankfinder.chathurangasandun.boatlocator.model.User;
 
 /**
  * Created by Lincoln on 07/01/16.

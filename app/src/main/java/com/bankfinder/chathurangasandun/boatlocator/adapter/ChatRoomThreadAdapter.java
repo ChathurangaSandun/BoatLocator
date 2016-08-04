@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import info.androidhive.gcm.R;
-import info.androidhive.gcm.model.Message;
+import com.bankfinder.chathurangasandun.boatlocator.R;
+import com.bankfinder.chathurangasandun.boatlocator.model.Message;
 
 public class ChatRoomThreadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

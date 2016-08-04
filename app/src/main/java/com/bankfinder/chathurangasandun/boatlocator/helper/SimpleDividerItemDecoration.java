@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import info.androidhive.gcm.R;
+import com.bankfinder.chathurangasandun.boatlocator.R;
 
 /**
  * Created by Lincoln on 30/10/15.

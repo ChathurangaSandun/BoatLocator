@@ -29,12 +29,12 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import info.androidhive.gcm.activity.ChatRoomActivity;
-import info.androidhive.gcm.activity.MainActivity;
-import info.androidhive.gcm.app.Config;
-import info.androidhive.gcm.app.MyApplication;
-import info.androidhive.gcm.model.Message;
-import info.androidhive.gcm.model.User;
+import com.bankfinder.chathurangasandun.boatlocator.activity.ChatRoomActivity;
+import com.bankfinder.chathurangasandun.boatlocator.activity.MainActivity;
+import com.bankfinder.chathurangasandun.boatlocator.app.Config;
+import com.bankfinder.chathurangasandun.boatlocator.app.MyApplication;
+import com.bankfinder.chathurangasandun.boatlocator.model.Message;
+import com.bankfinder.chathurangasandun.boatlocator.model.User;
 
 public class MyGcmPushReceiver extends GcmListenerService {
 

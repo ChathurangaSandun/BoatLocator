@@ -32,16 +32,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import info.androidhive.gcm.R;
-import info.androidhive.gcm.adapter.ChatRoomsAdapter;
-import info.androidhive.gcm.app.Config;
-import info.androidhive.gcm.app.EndPoints;
-import info.androidhive.gcm.app.MyApplication;
-import info.androidhive.gcm.gcm.GcmIntentService;
-import info.androidhive.gcm.gcm.NotificationUtils;
-import info.androidhive.gcm.helper.SimpleDividerItemDecoration;
-import info.androidhive.gcm.model.ChatRoom;
-import info.androidhive.gcm.model.Message;
+import com.bankfinder.chathurangasandun.boatlocator.R;
+import com.bankfinder.chathurangasandun.boatlocator.adapter.ChatRoomsAdapter;
+import com.bankfinder.chathurangasandun.boatlocator.app.Config;
+import com.bankfinder.chathurangasandun.boatlocator.app.EndPoints;
+import com.bankfinder.chathurangasandun.boatlocator.app.MyApplication;
+import com.bankfinder.chathurangasandun.boatlocator.gcm.GcmIntentService;
+import com.bankfinder.chathurangasandun.boatlocator.gcm.NotificationUtils;
+import com.bankfinder.chathurangasandun.boatlocator.helper.SimpleDividerItemDecoration;
+import com.bankfinder.chathurangasandun.boatlocator.model.ChatRoom;
+import com.bankfinder.chathurangasandun.boatlocator.model.Message;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
+  /*  public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_logout:
                 MyApplication.getInstance().logout();
@@ -325,6 +325,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(menuItem);
     }
-
+*/
 
 }

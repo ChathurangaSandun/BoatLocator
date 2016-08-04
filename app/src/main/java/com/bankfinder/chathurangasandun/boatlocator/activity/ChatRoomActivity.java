@@ -34,14 +34,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.androidhive.gcm.R;
-import info.androidhive.gcm.adapter.ChatRoomThreadAdapter;
-import info.androidhive.gcm.app.Config;
-import info.androidhive.gcm.app.EndPoints;
-import info.androidhive.gcm.app.MyApplication;
-import info.androidhive.gcm.gcm.NotificationUtils;
-import info.androidhive.gcm.model.Message;
-import info.androidhive.gcm.model.User;
+import com.bankfinder.chathurangasandun.boatlocator.R;
+import com.bankfinder.chathurangasandun.boatlocator.adapter.ChatRoomThreadAdapter;
+import com.bankfinder.chathurangasandun.boatlocator.app.Config;
+import com.bankfinder.chathurangasandun.boatlocator.app.EndPoints;
+import com.bankfinder.chathurangasandun.boatlocator.app.MyApplication;
+import com.bankfinder.chathurangasandun.boatlocator.gcm.NotificationUtils;
+import com.bankfinder.chathurangasandun.boatlocator.model.Message;
+import com.bankfinder.chathurangasandun.boatlocator.model.User;
 
 public class ChatRoomActivity extends AppCompatActivity {
 

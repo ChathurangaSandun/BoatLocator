@@ -27,10 +27,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.androidhive.gcm.R;
-import info.androidhive.gcm.app.EndPoints;
-import info.androidhive.gcm.app.MyApplication;
-import info.androidhive.gcm.model.User;
+import com.bankfinder.chathurangasandun.boatlocator.R;
+import com.bankfinder.chathurangasandun.boatlocator.app.EndPoints;
+import com.bankfinder.chathurangasandun.boatlocator.app.MyApplication;
+import com.bankfinder.chathurangasandun.boatlocator.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 

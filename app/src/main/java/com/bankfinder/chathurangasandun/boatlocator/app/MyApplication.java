@@ -12,8 +12,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import info.androidhive.gcm.activity.LoginActivity;
-import info.androidhive.gcm.helper.MyPreferenceManager;
+import com.bankfinder.chathurangasandun.boatlocator.activity.LoginActivity;
+import com.bankfinder.chathurangasandun.boatlocator.helper.MyPreferenceManager;
 
 /**
  * Created by Ravi on 13/05/15.
