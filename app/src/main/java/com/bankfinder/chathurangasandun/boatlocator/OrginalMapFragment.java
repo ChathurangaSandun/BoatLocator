@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -48,6 +49,7 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionError;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 import com.mapbox.mapboxsdk.offline.OfflineTilePyramidRegionDefinition;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONObject;
 
@@ -125,8 +127,13 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
     String responseValue;
 
+    SlidingUpPanelLayout slidingLayout;
+
 
     static String error = "no";
+
+
+    TextView tvSlideupdwn;
 
 
 
@@ -211,11 +218,50 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
 
+
+
+
+        slidingLayout = (SlidingUpPanelLayout)v.findViewById(R.id.sliding_layout);
+        slidingLayout.setPanelHeight(40);
+        slidingLayout.setShadowHeight(10);
+        slidingLayout.setPanelSlideListener(onSlideListener());
+        tvSlideupdwn = (TextView) v.findViewById( R.id.tvSlideupdown);
+
+
         return v;
-
-
-
     }
+
+
+    private SlidingUpPanelLayout.PanelSlideListener onSlideListener() {
+        return new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+                tvSlideupdwn.setText("Slide Up");
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+                tvSlideupdwn.setText("Slide Up");
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+                tvSlideupdwn.setText("Slide Down");
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+
+            }
+        };
+    }
+
+
 
     @Override
     public void onMapReady(MapboxMap mb) {

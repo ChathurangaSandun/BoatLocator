@@ -61,6 +61,8 @@ public class LocationService extends Service {
      Ringtone r;
     Vibrator vibrator;
 
+    static double staticLat,staticLong;
+
     static boolean isInit = false;
 
 
@@ -323,6 +325,9 @@ public class LocationService extends Service {
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
 
+
+                staticLat = latitude;
+                staticLong = longitude;
                 //check inside the boader
                 //checkInsideTheBoarder((float)latitude,(float) longitude);
 
