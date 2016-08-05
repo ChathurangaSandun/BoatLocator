@@ -39,7 +39,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bankfinder.chathurangasandun.boatlocator.db.DatabaseOpenHelper;
+import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
+import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -56,7 +65,9 @@ import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
     boolean a= false;
     Vibrator v;
 
+    RequestQueue queue ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -112,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+        queue= Volley.newRequestQueue(this);
 
 
 
@@ -148,6 +164,10 @@ public class MainActivity extends AppCompatActivity {
 
                 sendSMS("0711192365","PLEASE HELP ME !!!!! This is from "+boatID+". I,m getting a trouble in the sea. (latitude "+LocationService.staticLat+ ", longitude"+LocationService.staticLong+").");
 // NADUN 0711192365 THATHTHA 0719735738
+
+
+                String url = ServerConstrants.SERVEWR_URL+"connections/journy/Emergency.php";
+                informEmergencyCase(LocationService.staticLat,LocationService.staticLong,url,boatID);
             }
         });
 
@@ -467,11 +487,66 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void informEmergencyCase(){
+
+    private void informEmergencyCase(final double lat, final double lng , String url, final String boatID) {
+
+
+
+
+
+
+        Log.i("startpoint", "imform emergency: "+url);
+
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.i("startpoint", response);
+
+
+                    }
+
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("responseValue", "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                String[] dateAndTime = new DeviceUtil(getApplicationContext()).getDateAndTime();
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("journyid", LocationService.journyid);
+                params.put("boatid", boatID);
+                params.put("startlat", String.valueOf(lat));
+                params.put("startlong", String.valueOf(lng));
+                params.put("time",dateAndTime[1]);
+                params.put("date",dateAndTime[0]);
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+
+
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
 
 
     }
-
 
 
 
