@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoDragView="@+id/dragView"
+        sothree:umanoOverlay="true"
+        sothree:umanoPanelHeight="68dp"
+        sothree:umanoParalaxOffset="100dp"
+        sothree:umanoShadowHeight="4dp">
+
+
     <!-- Set the starting camera position and map style using xml-->
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
@@ -20,6 +32,41 @@
         mapbox:zoom_max="20"
          />
 
+
+        <!-- SLIDING LAYOUT -->
+        <LinearLayout
+            android:id="@+id/dragView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:background="#EEEEEE"
+            android:clickable="true"
+            android:focusable="false"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Slide Up"
+                android:id="@+id/tvSlideupdown"
+                android:background="#EEEEEE"
+                android:textColor="#000"
+                android:textAlignment="center"
+                android:gravity="center"
+                />
+
+            <include layout="@layout/sliding_settings"/>
+
+
+
+        </LinearLayout>
+
+
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:visibility="gone"
@@ -30,5 +77,6 @@
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         style="@android:style/Widget.ProgressBar.Horizontal" />
+
 
 </FrameLayout>
