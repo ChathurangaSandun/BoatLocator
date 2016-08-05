@@ -2,6 +2,7 @@ package com.bankfinder.chathurangasandun.boatlocator;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,6 +134,23 @@ public class MainActivity extends AppCompatActivity {
         databaseOpenHelper.createdatabase();
 
 
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.help_layout);
+        dialog.getWindow() .setBackgroundDrawableResource(R.color.red);
+        //dialog.setTitle("HELP ME!!!!!!");
+        ImageButton im = (ImageButton) dialog.findViewById(R.id.imageButton);
+
+        im.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
+                String boatID = prefs.getString("BoatId","COLO001-101");
+
+                sendSMS("0711192365","PLEASE HELP ME !!!!! This is from "+boatID+". I,m getting a trouble in the sea. (latitude "+LocationService.staticLat+ ", longitude"+LocationService.staticLong+").");
+// NADUN 0711192365 THATHTHA 0719735738
+            }
+        });
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -139,13 +158,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
-                String boatID = prefs.getString("BoatId","COLO001-101");
 
-                sendSMS("0711192365","PLEASE HELP ME !!!!! This is from "+boatID+". I,m getting a trouble in the sea. (latitude "+LocationService.staticLat+ ", longitude"+LocationService.staticLong+").");
-// NADUN 0711192365 THATHTHA 0719735738
 
-                if(a){
+                //hlp dialog
+                dialog.show();
+
+
+                /*if(a){
                    r.stop();
                     v.cancel();
                     a=false;
@@ -154,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     v.vibrate(Integer.MAX_VALUE);
 
                     a= true;
-                }
+                }*/
 
 
 
@@ -285,6 +304,12 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MainActicvtiy", "start.................................");
         //i = new Intent(this,LocationService.class);
         //startService(i);
+
+
+
+
+
+
     }
 
 
@@ -441,6 +466,11 @@ public class MainActivity extends AppCompatActivity {
         sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
     }
 
+
+    private void informEmergencyCase(){
+
+
+    }
 
 
 

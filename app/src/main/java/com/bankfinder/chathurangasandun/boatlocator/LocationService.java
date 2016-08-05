@@ -257,6 +257,7 @@ public class LocationService extends Service {
         locationManager.removeUpdates(listener);
 
 
+
     }
 
     public static Thread performOnBackgroundThread(final Runnable runnable) {
