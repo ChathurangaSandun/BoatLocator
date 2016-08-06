@@ -82,7 +82,7 @@ public class LocationService extends Service {
 
     RequestQueue requestQueue;
 
-    static String journyid;
+    static String journyid,staticboatid;
 
     ArrayList<LatLng> polygonArrayList = new ArrayList<>();
 
@@ -239,6 +239,8 @@ public class LocationService extends Service {
         String date = dateAndTime[0];
         String time = dateAndTime[1];
 
+
+        staticboatid= boatID;
 
 
         ParseObject locationobject = new ParseObject("location");

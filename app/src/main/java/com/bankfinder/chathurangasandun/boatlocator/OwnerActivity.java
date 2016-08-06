@@ -67,6 +67,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
 
     static  String journyID;
 
+    static String ownerboatid;
 
 
     private final  String TAG = "OwnerActivity";
@@ -111,6 +112,8 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
         String boatID = prefs.getString("BoatId","");
         String name =  prefs.getString("Name","");
+
+        ownerboatid = boatID;
 
 
 

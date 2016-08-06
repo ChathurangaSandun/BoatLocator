@@ -159,15 +159,21 @@ public class MainActivity extends AppCompatActivity {
         im.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = getSharedPreferences("DEVICE", MODE_PRIVATE);
-                String boatID = prefs.getString("BoatId","COLO001-101");
+                String boatID = OwnerActivity.ownerboatid;
+                Log.i(TAG, "boatID: "+boatID);
 
                 sendSMS("0711192365","PLEASE HELP ME !!!!! This is from "+boatID+". I,m getting a trouble in the sea. (latitude "+LocationService.staticLat+ ", longitude"+LocationService.staticLong+").");
 // NADUN 0711192365 THATHTHA 0719735738
 
 
-                String url = ServerConstrants.SERVEWR_URL+"connections/journy/Emergency.php";
-                informEmergencyCase(LocationService.staticLat,LocationService.staticLong,url,boatID);
+                if(LocationService.journyid != null){
+                    String url = ServerConstrants.SERVEWR_URL+"connections/journy/Emergency.php";
+                    informEmergencyCase(LocationService.staticLat,LocationService.staticLong,url,boatID);
+                }else{
+                    Toast.makeText(getApplication(),"Still you don't start a journy yet",Toast.LENGTH_LONG).show();
+                }
+
+
             }
         });
 
