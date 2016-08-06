@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        setAnimation();
+        //setAnimation();
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
@@ -59,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
 
         Log.i("reg", "saveData: "+isReg);
     }
-
+/*
     private void setAnimation() {
         ObjectAnimator scaleXAnimation = ObjectAnimator.ofFloat(findViewById(R.id.welcome_text), "scaleX", 5.0F, 1.0F);
         scaleXAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -78,5 +78,5 @@ public class SplashActivity extends AppCompatActivity {
         findViewById(R.id.imagelogo).setAlpha(1.0F);
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.translate_top_to_center);
         findViewById(R.id.imagelogo).startAnimation(anim);
-    }
+    }*/
 }

@@ -155,17 +155,17 @@ public class RegisterDevice extends AppCompatActivity {
         util = new DeviceUtil(getApplicationContext());
         imei=util.getDevicekey();
         tvImei.setText(imei);
-        tvimeminuber.setText(" "+imei);
+        tvimeminuber.setText(""+imei);
 
         String[] simNumber = util.getSimNumber();
         sim = simNumber[1];
         mobile = "0718256773";
         provider="Mobitel";
 
-        tvSim.setText("  "+sim);
-        tvMobile.setText("- "+mobile);
+        tvSim.setText(" "+sim);
+        tvMobile.setText(""+mobile);
 
-        tvProvider.setText("- "+provider);//TODO set provider
+        tvProvider.setText(""+provider);//TODO set provider
 
 
 

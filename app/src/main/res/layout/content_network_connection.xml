@@ -10,7 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.bankfinder.chathurangasandun.boatlocator.internetconnection.NetworkConnectionActivity"
-    tools:showIn="@layout/activity_network_connection">
+    tools:showIn="@layout/activity_network_connection"
+    android:background="@color/background_of_windows">
 
 
     <android.support.v4.widget.NestedScrollView
@@ -278,6 +279,8 @@
                 android:text="go inside"
                 android:id="@+id/btProcess"
                 android:layout_gravity="center_horizontal"
+                android:background="@color/primary"
+                android:textColor="#ffff"
                  />
 
             <Space

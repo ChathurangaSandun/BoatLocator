@@ -150,15 +150,26 @@ public class NetworkConnectionActivity extends AppCompatActivity {
                 Log.i(TAG, "run: ................");
                 mHandler.postDelayed(mUpdateUI, 1000); // 1 second
 
-                textViewNetwork.setText(new NetworkUtil().getConnectivityStatusString(getApplicationContext()));
+
+                String network = new NetworkUtil().getConnectivityStatusString(getApplicationContext());
+                textViewNetwork.setText(network);
+
+                if(network.equals("Wifi enabled") || network.equals("Mobile data enabled") ){
+                    networkEnable.setEnabled(false);
+                }else{
+                    networkEnable.setEnabled(true);
+                }
+
 
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 providerEnabled= locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
                 if(providerEnabled){
                     tvGPs.setText("GPS is Enabled");
+                    gpsEnable.setEnabled(false);
                 }else{
                     tvGPs.setText("GPS Not Available");
+                    gpsEnable.setEnabled(true);
                 }
 
             }

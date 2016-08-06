@@ -8,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.bankfinder.chathurangasandun.boatlocator.LoginActivity">
+    tools:context="com.bankfinder.chathurangasandun.boatlocator.LoginActivity"
+    android:background="@color/background_of_windows">
 
     <!-- Login progress -->
     <ImageView
@@ -90,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title_activity_login"
                 android:textStyle="bold"
-                android:background="@color/colorAccent"
+                android:background="@color/primary"
                 android:textColor="@color/global_color_primary_light"
                 />
             </com.andexert.library.RippleView>

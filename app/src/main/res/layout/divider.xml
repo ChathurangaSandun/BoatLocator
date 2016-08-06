@@ -5,8 +5,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#111"
-        android:layout_marginLeft="65dp"
+        android:background="#2e232e"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
 
 

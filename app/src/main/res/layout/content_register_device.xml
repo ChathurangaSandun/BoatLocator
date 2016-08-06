@@ -11,7 +11,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.bankfinder.chathurangasandun.boatlocator.RegisterDevice"
     tools:showIn="@layout/activity_register_device"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_of_windows">
 
 
     <android.support.v4.widget.NestedScrollView
@@ -60,12 +61,14 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
 
 
+
                 >
 
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:id="@+id/imageViews"
+                    android:src="@drawable/ic_account_circle_black_48dp"
 
                     />
 
@@ -103,7 +106,8 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_horizontal_margin">
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                >
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -222,6 +226,7 @@
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:id="@+id/imageVifews"
+                        android:src="@drawable/ic_dock_black_48dp"
 
                         />
 
@@ -250,126 +255,215 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/activity_vertical_margin"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_horizontal_margin">
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="15dp">
 
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:paddingBottom="10dp"
-                        android:weightSum="100"
-                       >
+                    <ImageView
+                        android:id="@+id/ivContactItem1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:src="@drawable/imeii"
+                        />
 
                     <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Imei -"
-                            android:id="@+id/textView5"
-                            android:layout_weight="25"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:id="@+id/tvimeiNumber"
-                            android:layout_weight="75"/>
-                    </LinearLayout>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@id/ivContactItem1"
+                        android:layout_toRightOf="@id/ivContactItem1"
+                        android:id="@+id/tvimeiNumber"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:paddingBottom="10dp"
-                        android:weightSum="100"
-                        >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvimeiNumber"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/ivContactItem1"
+                        android:layout_toRightOf="@id/ivContactItem1"
+                        android:text="Imei Number"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Sim Number"
-                            android:id="@+id/textView10"
-                            android:layout_weight="25"/>
+                </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:id="@+id/tvsim"
-                            android:layout_weight="75"/>
-                    </LinearLayout>
+                <include layout="@layout/divider" />
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:paddingBottom="10dp"
-                        android:weightSum="100"
-                        >
+                <!--=============================-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Provider"
-                            android:id="@+id/textView7"
-                            android:layout_weight="25"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="15dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:id="@+id/tvProvider"
-                            android:layout_weight="75"/>
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/ivContactItem4"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:src="@drawable/ic_sim_card_alert_black_48dp"
+                        />
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:paddingBottom="10dp"
-                        android:weightSum="100"
-                        >
+                    <TextView
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Mobile"
-                            android:id="@+id/textView11"
-                            android:layout_weight="25"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@id/ivContactItem4"
+                        android:layout_toRightOf="@id/ivContactItem4"
+                        android:id="@+id/tvsim"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:id="@+id/tvMobile"
-                            android:layout_weight="75"/>
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvsim"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/ivContactItem4"
+                        android:layout_toRightOf="@id/ivContactItem4"
+                        android:text="Sim Number"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+
+                </RelativeLayout>
+
+                <include layout="@layout/divider" />
 
 
 
 
 
+                <!--=============================-->
 
-                </LinearLayout>
+
+                <!--=============================-->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="15dp">
+
+                    <ImageView
+                        android:id="@+id/ivContactItem5"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:src="@drawable/ic_speaker_phone_black_48dp"
+                        android:tint="@color/colorPrimary"/>
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@id/ivContactItem5"
+                        android:layout_toRightOf="@id/ivContactItem5"
+                        android:id="@+id/tvProvider"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvProvider"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/ivContactItem5"
+                        android:layout_toRightOf="@id/ivContactItem5"
+                        android:text="Provider"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+
+                </RelativeLayout>
+
+                <include layout="@layout/divider" />
+
+
+
+
+
+                <!--=============================-->
+
+
+                <!--=============================-->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="15dp">
+
+                    <ImageView
+                        android:id="@+id/ivContactItem6"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:src="@drawable/ic_call_black_48dp"
+                        />
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@id/ivContactItem6"
+                        android:layout_toRightOf="@id/ivContactItem6"
+                        android:id="@+id/tvMobile"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvMobile"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/ivContactItem6"
+                        android:layout_toRightOf="@id/ivContactItem6"
+                        android:text="Mobile Number"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+
+                </RelativeLayout>
+
+                <include layout="@layout/divider" />
+
+
 
             </LinearLayout>
 
@@ -416,6 +510,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:id="@+id/imageddVifews"
+                            android:src="@drawable/my_boat"
 
                             />
 
