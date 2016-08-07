@@ -1,40 +1,36 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.LocationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +43,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bankfinder.chathurangasandun.boatlocator.db.DatabaseOpenHelper;
+import com.bankfinder.chathurangasandun.boatlocator.internetconnection.NetworkUtil;
 import com.bankfinder.chathurangasandun.boatlocator.parse.DeviceUtil;
 import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -59,14 +56,8 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -99,8 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
     RequestQueue queue ;
 
+    Runnable mUpdateUI;
+
+    TextView errorTest;
+
+    FrameLayout container;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -127,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        queue= Volley.newRequestQueue(this);
 
+        queue= Volley.newRequestQueue(this);
 
 
 
@@ -139,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         //set defult fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        OrginalMapFragment orginalMapFragment = new OrginalMapFragment();
+        final OrginalMapFragment orginalMapFragment = new OrginalMapFragment();
         fragmentTransaction.replace(R.id.container, orginalMapFragment);
         fragmentTransaction.commit();
 
@@ -177,6 +174,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        errorTest = (TextView) findViewById(R.id.textView5);
+        container = (FrameLayout) findViewById(R.id.container);
+        final int ORANGE = 0xFFFF3300;
+
+        final Handler mHandler = new Handler();
+
+        mUpdateUI = new Runnable() {
+            public void run() {
+                Log.i(TAG, "getting ......"+OrginalMapFragment.error);
+                mHandler.postDelayed(mUpdateUI, 1000);
+                if(OrginalMapFragment.error.equals("yes")){
+                    errorTest.setText("You Are Crossing Boarder");
+                    errorTest.setVisibility(View.VISIBLE);
+                    container.setBackgroundColor(getResources().getColor(R.color.trans));
+
+
+                }else{
+                    errorTest.setVisibility(View.INVISIBLE);
+                }
+
+
+
+            }
+        };
+
+
+        mHandler.post(mUpdateUI);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -215,6 +239,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         //navigation drawer
 
         //create navigation drawer
@@ -223,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.background)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("Sandun").withNameShown(true).withEmail("clivekumara@gmail.com").withIcon(getResources().getDrawable(R.drawable.my_boat))
+                        new ProfileDrawerItem().withName("Sandun").withNameShown(true).withEmail("clivekumara@gmail.com").withIcon(getResources().getDrawable(R.drawable.boatowner))
 
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
@@ -242,11 +268,10 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withDescription("see Main  marain map").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Weather").withDescription("Full Weather Details of your area").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("My Trips").withDescription("Path history in last 7 days ").withDescriptionTextColorRes(R.color.accent).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName("Emergency").withDescription("Inform / SOS facility with authoried people").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
-        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Chat").withDescription("Chat With Others").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Home").withDescription("see Main  marain map").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.home));
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName("Weather").withDescription("Full Weather Details of your area").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.ic_brightness_high_black_36dp));
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName("My Trips").withDescription("Path history in last 7 days ").withDescriptionTextColorRes(R.color.accent).withDescriptionTextColorRes(R.color.colorPrimary).withIcon(getResources().getDrawable(R.drawable.my_boat));
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName("Chat").withDescription("Chat With Others").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.chat));
         PrimaryDrawerItem item6 = new PrimaryDrawerItem().withName("Others").withDescription("").withDescriptionTextColorRes(R.color.accent).withIcon(getResources().getDrawable(R.drawable.dott));
 
 
@@ -263,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
                         item1,
                         item2,
                         item3,
-                        item4,
                         item5,
                         item6
                 )
@@ -281,8 +305,10 @@ public class MainActivity extends AppCompatActivity {
                                 fragmentTransaction.replace(R.id.container, orginalMapFragment);
                             }if ("Weather".equals(selectedItem)){
                                 Log.d(TAG, "Weather");
-                                WeatherMapFragment weatherMapFragment = new WeatherMapFragment();
-                                fragmentTransaction.replace(R.id.container, weatherMapFragment);
+                                startActivity(new Intent(getApplication(),Weatheractivity.class));
+
+
+
 
                             }else if ("My Trips".equals(selectedItem)) {
                                 Log.d(TAG, "ATM Finder");

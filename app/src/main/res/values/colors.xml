@@ -15,6 +15,10 @@
     <color name="global_color_green_control_activated">#ffc107</color>
     <color name="red">#FF0000</color>
 
+    <color name="trans">#1AFF0000</color>
+
+
+
 
 
     <color name="background_of_windows">#C8E0FB</color>

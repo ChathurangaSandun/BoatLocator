@@ -30,7 +30,17 @@
         mapbox:zoom_min="5"
         mapbox:zoom="10"
         mapbox:zoom_max="20"
-         />
+
+         >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+
+            android:id="@+id/back"/>
+
+
+    </com.mapbox.mapboxsdk.maps.MapView>
 
 
         <!-- SLIDING LAYOUT -->
@@ -50,8 +60,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Slide Up"
                 android:id="@+id/tvSlideupdown"
-                android:background="#EEEEEE"
-                android:textColor="#000"
+                android:background="@color/primary"
+                android:textColor="#ffff"
                 android:textAlignment="center"
                 android:gravity="center"
                 />
@@ -66,11 +76,10 @@
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-
     <ProgressBar
         android:id="@+id/progress_bar"
         android:visibility="gone"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="25dp"
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"

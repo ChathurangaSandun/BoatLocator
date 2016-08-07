@@ -1,5 +1,9 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +14,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -127,17 +133,18 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
     String responseValue;
 
+    TextView errorText;
     SlidingUpPanelLayout slidingLayout;
 
 
     static String error = "no";
 
 
-    TextView tvSlideupdwn;
+    TextView tvSlideupdwn,backgroundText;
 
 
 
-
+    Runnable mUpdateUI;
 
 
     public OrginalMapFragment() {
@@ -189,6 +196,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
         Log.d(TAG+"value-1", downloadvalue.getInt("VALUE",0)+"");
 
+
+        backgroundText = (TextView) v.findViewById(R.id.back);
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
         r = RingtoneManager.getRingtone(getActivity(), notification);
@@ -305,7 +314,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
                 IconFactory iconFactory = IconFactory.getInstance(getActivity());
-                Drawable iconDrawable = ContextCompat.getDrawable(getActivity(), R.drawable.dot); //http://www.flaticon.com/free-icon/sailboat_116500
+                Drawable iconDrawable = ContextCompat.getDrawable(getContext(), R.drawable.dot); //http://www.flaticon.com/free-icon/sailboat_116500
                 Icon icon = iconFactory.fromDrawable(iconDrawable);
 
 
@@ -652,9 +661,16 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
             r.stop();
             vibrator.cancel();
+
+            backgroundText.setVisibility(View.INVISIBLE);
             Log.i("Location polygon", "in");
         }else{
             error = "yes";
+            backgroundText.setVisibility(View.VISIBLE);
+
+            backgroundText.setBackgroundColor(getResources().getColor(R.color.trans));
+
+
 
             r.play();
             vibrator.vibrate(Integer.MAX_VALUE);
