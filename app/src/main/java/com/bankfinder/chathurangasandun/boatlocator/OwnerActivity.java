@@ -137,11 +137,14 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
         });
 
         //add fiherman
-        //fishermanList.add(0,"siripala");
+        fishermanList.add(0,"tharuka");
+        fishermanList.add(1,"Kumara");
+        fishermanList.add(2,"pramoj");
+        fishermanList.add(3,"nadun");
+        fishermanList.add(4,"Ukku");
 
 
-
-        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),R.drawable.background);
+        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),R.drawable.boatowner);
         Bitmap circularBitmap = ImageConverter.getRoundedCornerBitmap(bitmap, 180);
 
         ImageView circularImageView = (ImageView)findViewById(R.id.circleView);
@@ -189,7 +192,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
             }
         }));
 
-        btStart = (Button) findViewById(R.id.btStart);
+        /*btStart = (Button) findViewById(R.id.btStart);
 
         btStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,7 +215,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                     alertDialog.show();
                 }
             }
-        });
+        });*/
 
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Please wait...");
@@ -229,7 +232,7 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
             public void onClick(DialogInterface dialog, int which) {
                 fishermanadded = name;
 
-                //startActivity(new Intent(getApplication(),MainActivity.class));
+                startActivity(new Intent(getApplication(),MainActivity.class));
 
 
 
@@ -297,7 +300,14 @@ public class OwnerActivity extends AppCompatActivity  implements   AddFisherManD
                     .inflate(R.layout.my_text_view, parent, false);
             // set the view's size, margins, paddings and layout parameters
 
+            Bitmap bitmap = BitmapFactory.decodeResource(parent.getResources(),R.drawable.ic_account_circle_black_48dp);
+            Bitmap circularBitmap = ImageConverter.getRoundedCornerBitmap(bitmap, 180);
+
+
             ViewHolder vh = new ViewHolder((TextView) v.findViewById(R.id.tvOwnerName));
+
+            ImageView circularImageView = (ImageView)v.findViewById(R.id.ivfishermanFace);
+            circularImageView.setImageBitmap(circularBitmap);
             return vh;
         }
 

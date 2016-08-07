@@ -7,13 +7,14 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@drawable/background"
+        android:src="@drawable/ic_account_circle_black_48dp"
         android:id="@+id/ivfishermanFace"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="10dp"
+
 
         android:layout_gravity="center"/>
 
