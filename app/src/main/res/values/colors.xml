@@ -22,4 +22,5 @@
 
 
     <color name="background_of_windows">#C8E0FB</color>
+    <color name="gray">#808080</color>
 </resources>

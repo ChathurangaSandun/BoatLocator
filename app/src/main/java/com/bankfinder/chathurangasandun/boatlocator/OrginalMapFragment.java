@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -89,6 +90,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
     private OnFragmentInteractionListener mListener;
 
     RequestQueue requestQueue;
+    MediaPlayer mp2;
 
 
     private View v;
@@ -236,6 +238,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         slidingLayout.setPanelSlideListener(onSlideListener());
         tvSlideupdwn = (TextView) v.findViewById( R.id.tvSlideupdown);
 
+        mp2 = MediaPlayer.create(getActivity().getBaseContext(), R.raw.sirun);
+
 
         return v;
     }
@@ -327,19 +331,16 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
                 int hour = c.get(Calendar.HOUR);
                 int minutes = c.get(Calendar.MINUTE);
                 int seconds = c.get(Calendar.SECOND);
-                String time = ""+hour +" :  "+ minutes+" : " +seconds;
+                String time = "" + hour + " :  " + minutes + " : " + seconds;
 
 
-                Log.d(TAG, "seconds "+time);
+                Log.d(TAG, "seconds " + time);
 
                 if (path.isEmpty()) { // for first lunch
                     path.add(loc);
 
                     Drawable iconDrawable1 = ContextCompat.getDrawable(getActivity(), R.drawable.my_boat); //http://www.flaticon.com/free-icon/sailboat_116500
                     Icon icon1 = iconFactory.fromDrawable(iconDrawable1);
-
-
-
 
 
                     mapboxMap.addMarker(new MarkerOptions()
@@ -366,9 +367,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 /////////////////////////
 
-                checkInsideTheBoarder((float)myLocationLat,(float)myLocationLong);
+                checkInsideTheBoarder((float) myLocationLat, (float) myLocationLong);
 
-                checkInsideSrilanka((float)myLocationLat,(float)myLocationLong);
+                checkInsideSrilanka((float) myLocationLat, (float) myLocationLong);
 
 
             }
@@ -399,10 +400,6 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
             }
         };
-
-
-
-
 
 
 
@@ -659,7 +656,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         if(myOuterBoaderPolygonFinal.contains(new Point(latitude,longitude))){
             error = "no";
 
-            r.stop();
+            //r.stop();
+            mp2.stop();
             vibrator.cancel();
 
             backgroundText.setVisibility(View.INVISIBLE);
@@ -670,9 +668,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
             backgroundText.setBackgroundColor(getResources().getColor(R.color.trans));
 
+            mp2.start();
 
-
-            r.play();
+            //r.play();
             vibrator.vibrate(Integer.MAX_VALUE);
             Log.i("Location polygon", "out");
         }
