@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bankfinder.chathurangasandun.boatlocator.server.ServerConstrants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +46,32 @@ public class NowWeatherFragment extends Fragment {
     private ProgressDialog pDialog;;
     private String jsonResponse;
 
+    private TextView tvPresure;
+    private TextView tvHumm;
+
+    private TextView tvMinT;
+    private TextView tvMaxT;
+    private TextView tvWind;
+    private TextView tvDirection;
+
+    private TextView tvRain;
+
+    private TextView tvCloude;
+
+    private TextView tvMainResult;
+    private TextView tvMainTemp;
+
+    /**
+     * Find the Views in the layout<br />
+     * <br />
+     * Auto-created on 2016-08-30 08:55:51 by Android Layout Finder
+     * (http://www.buzzingandroid.com/tools/android-layout-finder)
+     */
+    private void findViews() {
+
+    }
+
+
     public NowWeatherFragment() {
         // Required empty public constructor
     }
@@ -60,14 +88,33 @@ public class NowWeatherFragment extends Fragment {
 
         requestWeatherDetails();
 
+        tvPresure = (TextView)v.findViewById( R.id.tvPresure );
+        tvHumm = (TextView)v.findViewById( R.id.tvHumm );
+
+        tvMinT = (TextView)v.findViewById( R.id.tvMinT );
+        tvMaxT = (TextView)v.findViewById( R.id.tvMaxT );
+        tvWind = (TextView)v.findViewById( R.id.tvWind );
+        tvDirection = (TextView)v.findViewById( R.id.tvDirection );
+
+        tvRain = (TextView)v.findViewById( R.id.tvRain );
+
+        tvCloude = (TextView)v.findViewById( R.id.tvCloude );
+
+        tvMainResult = (TextView)v.findViewById( R.id.tvMainResult );
+
+        tvMainTemp = (TextView)v.findViewById( R.id.tvMainTemp);
+
 
         return v;
     }
 
     private void requestWeatherDetails() {
 
+        double lat = OrginalMapFragment.staticLat;
+        double lng = OrginalMapFragment.staticLong;
 
-        weatherURL = weatherURL+"&lat=9.32983136&lon=79.77310181";
+
+        weatherURL = weatherURL+"&lat="+lat+"&lon="+lng;
 
         showpDialog();
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -84,9 +131,42 @@ public class NowWeatherFragment extends Fragment {
 
 
                         try {
+
+
                             JSONObject jsonObject = new JSONObject(response);
-                            JSONObject coord =  jsonObject.getJSONObject("coord");
+
+
+                            JSONArray mianWeather =  jsonObject.getJSONArray("weather");
+
+                            JSONObject watherJsonMain = mianWeather.getJSONObject(0);
+
+
+
+                            tvMainResult.setText(watherJsonMain.get("description").toString());
+
+
+
+
+                            JSONObject weatherObject =  jsonObject.getJSONObject("main");
                             Log.i("weatherdata", "onResponse: " +jsonObject.getString("cod"));
+
+
+                            tvMainTemp.setText(weatherObject.get("temp").toString() +" C");
+                            tvPresure.setText(weatherObject.get("pressure").toString()+" hPa");
+                            tvHumm.setText(weatherObject.get("humidity").toString()+" %");
+                            tvMinT.setText(weatherObject.get("temp_min").toString()+" C");
+                            tvMaxT.setText(weatherObject.get("temp_max").toString()+" C");
+
+
+                            JSONObject windJson = jsonObject.getJSONObject("wind");
+
+
+                            tvWind.setText(windJson.get("speed").toString()+" Km/h");
+                            tvDirection.setText(windJson.get("deg").toString());
+
+
+                            tvRain.setText(jsonObject.getJSONObject("rain").get("3h").toString());
+                            tvCloude.setText(jsonObject.getJSONObject("cloude").get("all").toString());
 
 
 

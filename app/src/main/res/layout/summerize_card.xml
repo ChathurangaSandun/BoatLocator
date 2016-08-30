@@ -39,8 +39,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Rainy"
-                    android:id="@+id/textView"
-                    android:textSize="50dp"
+                    android:id="@+id/tvMainResult"
+                    android:textSize="30dp"
                     android:layout_marginTop="20dp" />
 
                 <TextView
@@ -48,8 +48,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="22 C"
-                    android:id="@+id/textView2"
-                    android:textSize="50dp"
+                    android:id="@+id/tvMainTemp"
+                    android:textSize="30dp"
                     android:layout_marginTop="25dp" />
             </LinearLayout>
 

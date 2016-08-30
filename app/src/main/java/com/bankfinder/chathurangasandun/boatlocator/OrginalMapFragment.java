@@ -98,6 +98,8 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
     private View v;
 
+    int pos = 0;
+
 
 
     private static final String TAG = "MainActivity";
@@ -150,6 +152,9 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
 
     Runnable mUpdateUI;
+
+    static double staticLat;
+    static double staticLong;
 
 
     public OrginalMapFragment() {
@@ -324,6 +329,14 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
             public void onMyLocationChange(Location location) {
                 double myLocationLat = location.getLatitude();
                 double myLocationLong = location.getLongitude();
+
+                if(pos == 0){
+                    staticLat = myLocationLat;
+                    staticLong = myLocationLong;
+
+                }else{
+                    pos ++;
+                }
 
 
                 IconFactory iconFactory = IconFactory.getInstance(getActivity());
