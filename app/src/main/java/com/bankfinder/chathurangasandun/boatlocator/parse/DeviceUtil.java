@@ -1,13 +1,17 @@
 package com.bankfinder.chathurangasandun.boatlocator.parse;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.BatteryManager;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -31,13 +35,19 @@ public class DeviceUtil {
     private final String TAG = "DeviceUtil";
     int level=0;
 
+    String getSimSerialNumber;
+    String getSimNumber;
 
 
     public String getDevicekey(){
         String identifier = null;
         TelephonyManager tm = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
         if (tm != null) {
-            identifier = tm.getDeviceId();
+            if (ctx.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                identifier = tm.getDeviceId();
+            }
+
+
         }
         if (identifier == null || identifier .length() == 0) {
             identifier = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -92,9 +102,10 @@ public class DeviceUtil {
 
     public String[] getSimNumber(){
         TelephonyManager telemamanger = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        String getSimSerialNumber = telemamanger.getSimSerialNumber();
-        String getSimNumber = telemamanger.getLine1Number();
-
+        if (ctx.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            getSimSerialNumber = telemamanger.getSimSerialNumber();
+            getSimNumber = telemamanger.getLine1Number();
+        }
         return new String[]{getSimNumber,getSimSerialNumber};
 
     }

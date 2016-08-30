@@ -39,6 +39,17 @@
 
             android:id="@+id/back"/>
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            style="@android:style/Widget.ProgressBar.Horizontal" />
+
 
     </com.mapbox.mapboxsdk.maps.MapView>
 
@@ -76,16 +87,7 @@
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:visibility="gone"
-        android:layout_width="fill_parent"
-        android:layout_height="25dp"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        style="@android:style/Widget.ProgressBar.Horizontal" />
+
 
 
 </FrameLayout>

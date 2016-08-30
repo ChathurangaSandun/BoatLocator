@@ -158,7 +158,11 @@ public class RegisterDevice extends AppCompatActivity {
         tvimeminuber.setText(""+imei);
 
         String[] simNumber = util.getSimNumber();
+
         sim = simNumber[1];
+        if(sim == null){
+            sim = "12536478";
+        }
         mobile = "0718256773";
         provider="Mobitel";
 

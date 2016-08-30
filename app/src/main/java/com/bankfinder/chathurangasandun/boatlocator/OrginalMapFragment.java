@@ -1,5 +1,7 @@
 package com.bankfinder.chathurangasandun.boatlocator;
 
+import android.*;
+import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -7,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -206,9 +209,11 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
         vibrator = (Vibrator) this.getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
 
-        mapView = (MapView) v.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+            mapView = (MapView) v.findViewById(R.id.mapView);
+            mapView.onCreate(savedInstanceState);
+            mapView.getMapAsync(this);
+
+
 
 
 
@@ -278,10 +283,14 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
 
     @Override
     public void onMapReady(MapboxMap mb) {
+
         mapboxMap = mb;
-        mapboxMap.setMyLocationEnabled(true);
-        mapboxMap.setOnMyLocationChangeListener(myLocationChangeListener);
-        drawPolygon(mapboxMap);
+
+            mapboxMap.setMyLocationEnabled(true);
+            mapboxMap.setOnMyLocationChangeListener(myLocationChangeListener);
+            drawPolygon(mapboxMap);
+
+
 
 
 
@@ -580,6 +589,7 @@ public class OrginalMapFragment extends Fragment implements OnMapReadyCallback ,
                             // Switch to determinate state
                             setPercentage((int) Math.round(percentage));
                             edit.putInt("VALUE",(int) Math.round(percentage));
+                            Log.i(TAG, "downloaded "+Math.round(percentage));
                             edit.commit();
                             Log.d(TAG+"value", downloadvalue.getInt("VALUE",0)+"");
 

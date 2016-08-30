@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 String boatID = OwnerActivity.ownerboatid;
                 Log.i(TAG, "boatID: "+boatID);
 
-                sendSMS("0711192365","PLEASE HELP ME !!!!! This is from "+boatID+". I,m getting a trouble in the sea. (latitude "+LocationService.staticLat+ ", longitude"+LocationService.staticLong+").");
+                sendSMS("0718256773","PLEASE HELP ME !!!!! This is from "+boatID+". I,m getting a trouble in the sea. (latitude "+LocationService.staticLat+ ", longitude"+LocationService.staticLong+").");
 // NADUN 0711192365 THATHTHA 0719735738
 
 
